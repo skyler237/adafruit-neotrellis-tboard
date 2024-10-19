@@ -29,8 +29,7 @@ TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
         if (any_key_pressed_callback_) {
             any_key_pressed_callback_(x, y, time_ms_.now());
         }
-    }
-    else if (event.bit.EDGE == SEESAW_KEYPAD_EDGE_FALLING) {
+    } else if (event.bit.EDGE == SEESAW_KEYPAD_EDGE_FALLING) {
         const auto& cb = on_released_callbacks_(x, y);
         if (cb.has_value()) {
             cb.value()(time_ms_.now());
@@ -54,8 +53,6 @@ void TrellisHWInterface::begin() {
     if (!trellis_.begin()) {
         Serial.println("failed to begin trellis");
         // while (1) delay(1);
-    } else {
-        Serial.println("Trellis initialized");
     }
 
     // Setup events, etc. for all the keys
@@ -64,9 +61,8 @@ void TrellisHWInterface::begin() {
             // activate rising and falling edges on all keys
             trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
             trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
-            trellis_.registerCallback(x, y, [](keyEvent event) -> TrellisCallback {
-                return get_instance().key_event_callback(event);
-            });
+            trellis_.registerCallback(
+                x, y, [](keyEvent event) -> TrellisCallback { return get_instance().key_event_callback(event); });
         }
     }
 }
@@ -75,8 +71,8 @@ void TrellisHWInterface::set_pixel_color(int x, int y, int r, int g, int b) {
     trellis_.setPixelColor(x, y, seesaw_NeoPixel::Color(r, g, b));
 }
 
-void TrellisHWInterface::set_pixel_color(int x, int y, RGB rgb) {
-    set_pixel_color(x, y, rgb.r, rgb.g, rgb.b);
+void TrellisHWInterface::set_pixel_color(int x, int y, RGBA rgb) {
+    set_pixel_color(x, y, rgb.colors.red, rgb.colors.green, rgb.colors.blue);
 }
 
 void TrellisHWInterface::clear_pixel(int x, int y) {
@@ -99,13 +95,12 @@ void TrellisHWInterface::register_on_any_key_released_callback(OnAnyKeyEventCall
     any_key_released_callback_ = std::move(callback);
 }
 
-
 void TrellisHWInterface::register_timer_callback(const int period_ms, OnTimerEventCallback callback) {
     if (period_ms == 0) {
-        current_period_ms_ = DEFAULT_TICK_PERIOD_MS;
-    }
-    else {
-        current_period_ms_ = period_ms;
+        next_timer_time_ = 0;
+    } else {
+        // Set timer to trigger right away
+        next_timer_time_ = time_ms_.now();
     }
     timer_callback_ = std::move(callback);
 }
@@ -125,10 +120,11 @@ void TrellisHWInterface::show() {
 
 void TrellisHWInterface::tick() {
     trellis_.read();
-    if (timer_callback_) {
+    if (timer_callback_ && next_timer_time_ > 0 && time_ms_.now() >= next_timer_time_) {
+        next_timer_time_ = time_ms_.now() + timer_period_ms_;
         timer_callback_(time_ms_.now());
     }
-    delay(current_period_ms_);
+    delayMicroseconds(DEFAULT_TICK_PERIOD_US);
     // if (any_key_callback_) {
     //     Serial.println("Has any key callback");
     //     any_key_callback_(0, 0, time_ms_.now());

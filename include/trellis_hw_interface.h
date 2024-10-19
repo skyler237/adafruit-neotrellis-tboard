@@ -10,19 +10,17 @@
 // #include "includes.h"
 #include <Adafruit_NeoTrellis.h>
 #include <timing.h>
-#include "optional.h"
 
 #include "colors.h"
+#include "optional.h"
 #include "trellis_interface.h"
-
 
 constexpr int X_DIM = 8;
 constexpr int Y_DIM = 8;
-static constexpr uint16_t DEFAULT_TICK_PERIOD_MS = 10;
-class TrellisHWInterface : public TrellisInterface
-{
-public:
+static constexpr uint32_t DEFAULT_TICK_PERIOD_US = 1000;
 
+class TrellisHWInterface : public TrellisInterface {
+public:
     static TrellisHWInterface& get_instance();
 
     TrellisCallback key_event_callback(keyEvent event);
@@ -33,7 +31,7 @@ public:
 
     void set_pixel_color(int x, int y, int r, int g, int b) override;
 
-    void set_pixel_color(int x, int y, RGB rgb);
+    void set_pixel_color(int x, int y, RGBA rgba);
 
     void clear_pixel(int x, int y) override;
 
@@ -51,8 +49,6 @@ public:
 
     void tick();
 
-
-
 private:
     explicit TrellisHWInterface();
     Adafruit_MultiTrellis trellis_;
@@ -61,7 +57,8 @@ private:
     OnAnyKeyEventCallback any_key_pressed_callback_;
     OnAnyKeyEventCallback any_key_released_callback_;
     OnTimerEventCallback timer_callback_;
-    uint16_t current_period_ms_{DEFAULT_TICK_PERIOD_MS};
+    Time next_timer_time_{0};
+    uint16_t timer_period_ms_;
     milliSeconds time_ms_;
 };
 #endif // TRELLIS_HW_INTERFACE_H
