@@ -103,6 +103,7 @@ void TrellisHWInterface::register_timer_callback(const int period_ms, OnTimerEve
         next_timer_time_ = time_ms_.now();
     }
     timer_callback_ = std::move(callback);
+    timer_period_ms_ = period_ms;
 }
 
 void TrellisHWInterface::clear_callbacks() {
@@ -133,4 +134,8 @@ void TrellisHWInterface::tick() {
     //     Serial.println("No any key callback");
     // }
     // Serial.println("");
+}
+
+void TrellisHWInterface::set_timer_period(uint16_t period_ms) {
+    timer_period_ms_ = period_ms;
 }

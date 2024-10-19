@@ -12,6 +12,8 @@ having the address of 0x2F (the A0 jumper is soldered)
 #include "Adafruit_NeoTrellis.h"
 #include "trellis_hw_interface.h"
 
+#include <Prandom.h>
+
 // #define Y_DIM 4 //number of rows of key
 // #define X_DIM 8 //number of columns of keys
 
@@ -26,6 +28,8 @@ having the address of 0x2F (the A0 jumper is soldered)
 
 #define Y_DIM 8 // number of rows of key
 #define X_DIM 8 // number of columns of keys
+
+Prandom RAND;
 
 // create a matrix of trellis panels
 Adafruit_NeoTrellis t_array[Y_DIM / 4][X_DIM / 4] = {
@@ -118,36 +122,27 @@ void setup() {
         }
     }
     TrellisHWInterface::get_instance().register_on_any_key_pressed_callback([](int x, int y, const Time&) {
-        TrellisHWInterface::get_instance().set_pixel_color(x, y, wheel_rgb((y * 16) + (x * 2)));
-        TrellisHWInterface::get_instance().show();
-    });
-    TrellisHWInterface::get_instance().register_on_any_key_released_callback([](int x, int y, const Time&) {
         TrellisHWInterface::get_instance().clear_pixel(x, y);
         TrellisHWInterface::get_instance().show();
     });
+    // TrellisHWInterface::get_instance().register_on_any_key_released_callback([](int x, int y, const Time&) {
+    //     TrellisHWInterface::get_instance().clear_pixel(x, y);
+    //     TrellisHWInterface::get_instance().show();
+    // });
 
-    TrellisHWInterface::get_instance().register_timer_callback(10, [](const Time& now) {
-        // Go from 0 to 255 and back every second
-        const uint16_t period = 2000;
-        const uint16_t half_period = period / 2;
-        const uint16_t color_period = period * 10;
-        const uint16_t color_half_period = color_period / 2;
+    TrellisHWInterface::get_instance().register_timer_callback(1000, [](const Time& now) {
+        static uint16_t timer_period_ms = 1000;
+        const uint16_t MIN_PERIOD = 200;
 
-        uint16_t brightness_idx = now % period;
-        if (brightness_idx > half_period) {
-            brightness_idx = period - brightness_idx;
-        }
-
-        uint16_t color_idx = now % color_period;
-        if (color_idx > color_half_period) {
-            color_idx = color_period - color_idx;
-        }
-
-        const uint8_t brightness = static_cast<uint8_t>(map(brightness_idx, 0, half_period, 0, 255));
-        const uint8_t color = static_cast<uint8_t>(map(color_idx, 0, color_half_period, 0, 255));
-        TrellisHWInterface::get_instance().set_pixel_color(0, 0, wheel_rgb(color, brightness));
+        int x = RAND.randint(0, X_DIM - 1);
+        int y = RAND.randint(0, Y_DIM - 1);
+        TrellisHWInterface::get_instance().set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
         TrellisHWInterface::get_instance().show();
         // Serial.printf("Timer event @ %.3f s\n", static_cast<double>(now) / 1000);
+        if (timer_period_ms > MIN_PERIOD) {
+            timer_period_ms -= 5;
+        }
+        TrellisHWInterface::get_instance().set_timer_period(timer_period_ms);
     });
 }
 

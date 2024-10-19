@@ -49,6 +49,8 @@ public:
 
     void tick();
 
+    void set_timer_period(uint16_t period_ms);
+
 private:
     explicit TrellisHWInterface();
     Adafruit_MultiTrellis trellis_;
