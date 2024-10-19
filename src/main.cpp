@@ -11,6 +11,8 @@ having the address of 0x2F (the A0 jumper is soldered)
 
 #include "Adafruit_NeoTrellis.h"
 
+#include "trellis_hw_interface.h"
+
 // #define Y_DIM 4 //number of rows of key
 // #define X_DIM 8 //number of columns of keys
 
@@ -40,6 +42,8 @@ Adafruit_NeoTrellis t_array[Y_DIM/4][X_DIM/4] = {
 //pass this matrix to the multitrellis object
 Adafruit_MultiTrellis trellis((Adafruit_NeoTrellis *)t_array, Y_DIM/4, X_DIM/4);
 
+TrellisHWInterface trellis_hw_interface;
+
 // Input a value 0 to 255 to get a color value.
 // The colors are a transition r - g - b - back to r.
 uint32_t Wheel(byte WheelPos) {
@@ -68,6 +72,7 @@ TrellisCallback blink(keyEvent evt){
 }
 
 void setup() {
+  trellis_hw_interface.begin();
   Serial.begin(9600);
   //while(!Serial) delay(1);
 
