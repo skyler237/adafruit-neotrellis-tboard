@@ -7,61 +7,16 @@
 #ifndef TRELLIS_INTERFACE_H
 #define TRELLIS_INTERFACE_H
 
-// #include "includes.h"
-#include <cmath>
 #include <functional>
 #include <memory>
-// #include <chrono>
 
-// #include "colors.h"
-
-
-struct Duration {
-    int seconds;
-    int milliseconds;
-};
-
-struct Time {
-    int seconds;
-    int milliseconds;
-
-    friend bool operator<(const Time& lhs, const Time& rhs) {
-        if (lhs.seconds < rhs.seconds) {
-            return true;
-        }
-        if (rhs.seconds < lhs.seconds) {
-            return false;
-        }
-        return lhs.milliseconds < rhs.milliseconds;
-    }
-
-    friend bool operator<=(const Time& lhs, const Time& rhs) { return !(rhs < lhs); }
-
-    friend bool operator>(const Time& lhs, const Time& rhs) { return rhs < lhs; }
-
-    friend bool operator>=(const Time& lhs, const Time& rhs) { return !(lhs < rhs); }
-
-    Time operator+(const Duration & duration) const {
-    Time result = {.seconds = seconds + duration.seconds, .milliseconds = milliseconds + duration.milliseconds};
-    if (result.milliseconds >= 1000) {
-        result.seconds += 1;
-        result.milliseconds -= 1000;
-    }
-    return result;
-};
-};
-
-
-struct Clock {
-    static Time now() {
-        return {.seconds=0, .milliseconds=0};
-    }
-};
+// Assume this is milliseconds
+using Time = uint32_t;
 
 // Used to register a callback for when a specific button is pressed
-using OnPressedCallback = std::function<void(const Time&)>;
+using OnEventCallback = std::function<void(const Time&)>;
 // Used to register a callback for when any button is pressed -- provides the x, y coordinates of the button
-using OnAnyKeyPressedCallback = std::function<void(int, int, const Time&)>;
+using OnAnyKeyEventCallback = std::function<void(int, int, const Time&)>;
 // Used to register a callback for a timer event
 using OnTimerEventCallback = std::function<void(const Time&)>;
 
@@ -84,10 +39,7 @@ private:
     std::array<std::array<T, cols>, rows> grid_;
 
     static bool check_bounds(int x, int y) {
-        if (x < 0 || x >= cols || y < 0 || y >= rows) {
-            return false;
-        }
-        return true;
+        return x >= 0 && x < cols && y >= 0 && y < rows;
     }
 };
 
@@ -101,8 +53,10 @@ public:
 
     virtual void set_pixel_color(int x, int y, int r, int g, int b) = 0;
     virtual void clear_pixel(int x, int y) = 0;
-    virtual void register_on_pressed_callback(int x, int y, OnPressedCallback callback) = 0;
-    virtual void register_on_any_key_pressed_callback(OnAnyKeyPressedCallback callback) = 0;
+    virtual void register_on_pressed_callback(int x, int y, OnEventCallback callback) = 0;
+    virtual void register_on_released_callback(int x, int y, OnEventCallback callback) = 0;
+    virtual void register_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) = 0;
+    virtual void register_on_any_key_released_callback(OnAnyKeyEventCallback callback) = 0;
     virtual void register_timer_callback(int period_ms, OnTimerEventCallback callback) = 0;
     virtual void show() = 0;
     virtual void clear_callbacks() = 0;

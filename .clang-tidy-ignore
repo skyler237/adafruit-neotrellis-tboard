@@ -1,0 +1,20 @@
+#
+# Copyright © 2024 Glydways, Inc.
+# https://glydways.com/
+#
+# Any paths/files listed here will not be included in clang-tidy. Example usages:
+#
+# Ignore a specific directory:
+#   onboard/cabin/nfc
+#
+# Ignore a specific file:
+#   onboard/cabin/nfc/nfc.cc
+#
+# Ignore all files in a directory:
+#   onboard/cabin/nfc/*
+#
+# Ignore all files with a specific extension:
+#   *.ext
+
+embedded/s32k_sdk
+onboard/cabin       # Bazel only, and clang-tidy will eventually use trunk when using bazel.
