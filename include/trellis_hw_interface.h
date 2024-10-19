@@ -23,7 +23,9 @@ public:
 
     TrellisCallback key_event_callback(keyEvent event);
 
-    void begin() const;
+    Adafruit_MultiTrellis& get_trellis();
+
+    void begin();
 
     void set_pixel_color(int x, int y, int r, int g, int b) override;
 
@@ -42,7 +44,7 @@ public:
     void show() override;
 
 private:
-    std::shared_ptr<Adafruit_MultiTrellis> trellis_;
+    Adafruit_MultiTrellis trellis_;
     Grid8x8<tl::optional<OnPressedCallback>> callbacks_;
     OnAnyKeyPressedCallback any_key_callback_;
 };

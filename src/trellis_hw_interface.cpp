@@ -5,16 +5,11 @@
 
 #include "trellis_hw_interface.h"
 
-TrellisHWInterface::TrellisHWInterface() {
-    Adafruit_NeoTrellis t_array[Y_DIM / 4][X_DIM / 4] = {
-
-        {Adafruit_NeoTrellis(0x2F), Adafruit_NeoTrellis(0x2E)},
-
-        {Adafruit_NeoTrellis(0x31), Adafruit_NeoTrellis(0x30)}
-    };
-    // Create underlying neotrellis object
-    trellis_ =
-        std::make_shared<Adafruit_MultiTrellis>(reinterpret_cast<Adafruit_NeoTrellis*>(t_array), Y_DIM / 4, X_DIM / 4);
+TrellisHWInterface::TrellisHWInterface() : trellis_(
+        reinterpret_cast<Adafruit_NeoTrellis*>(new Adafruit_NeoTrellis[Y_DIM / 4][X_DIM / 4]{
+            {Adafruit_NeoTrellis(0x2F), Adafruit_NeoTrellis(0x2E)},
+            {Adafruit_NeoTrellis(0x31), Adafruit_NeoTrellis(0x30)}
+        }), Y_DIM / 4, X_DIM / 4) {
 }
 
 TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
@@ -32,30 +27,35 @@ TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
     return nullptr;
 }
 
-void TrellisHWInterface::begin() const {
+Adafruit_MultiTrellis& TrellisHWInterface::get_trellis()
+{
+    return trellis_;
+}
+
+void TrellisHWInterface::begin() {
     // Setup serial interface
     Serial.begin(9600);
 
     // Make sure the trellis began ok...
-    if (!trellis_->begin()) {
+    if (!trellis_.begin()) {
         Serial.println("failed to begin trellis");
         // while (1) delay(1);
     }
 
-    // Setup events, etc. for all the keys
-    for (int y = 0; y < Y_DIM; y++) {
-        for (int x = 0; x < X_DIM; x++) {
-            // activate rising and falling edges on all keys
-            trellis_->activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
-            trellis_->activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
-            // trellis_->registerCallback(x, y, std::bind(&TrellisHWInterface::key_event_callback, this,
-            // std::placeholders::_1));
-        }
-    }
+    // // Setup events, etc. for all the keys
+    // for (int y = 0; y < Y_DIM; y++) {
+    //     for (int x = 0; x < X_DIM; x++) {
+    //         // activate rising and falling edges on all keys
+    //         trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
+    //         trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
+    //         // trellis_.registerCallback(x, y, std::bind(&TrellisHWInterface::key_event_callback, this,
+    //         // std::placeholders::_1));
+    //     }
+    // }
 }
 
 void TrellisHWInterface::set_pixel_color(int x, int y, int r, int g, int b) {
-    trellis_->setPixelColor(x, y, seesaw_NeoPixel::Color(r, g, b));
+    trellis_.setPixelColor(x, y, seesaw_NeoPixel::Color(r, g, b));
 }
 
 void TrellisHWInterface::set_pixel_color(int x, int y, RGB rgb) {
@@ -63,7 +63,7 @@ void TrellisHWInterface::set_pixel_color(int x, int y, RGB rgb) {
 }
 
 void TrellisHWInterface::clear_pixel(int x, int y) {
-    trellis_->setPixelColor(x, y, 0);
+    trellis_.setPixelColor(x, y, 0);
 }
 
 void TrellisHWInterface::register_on_pressed_callback(int x, int y, OnPressedCallback callback) {
@@ -89,5 +89,5 @@ void TrellisHWInterface::clear_callbacks() {
 }
 
 void TrellisHWInterface::show() {
-    trellis_->show();
+    trellis_.show();
 }
