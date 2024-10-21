@@ -78,6 +78,25 @@ TrellisCallback blink(keyEvent evt) {
     return 0;
 }
 
+void turn_on_random_pixel(const tboard::TrellisController& controller) {
+    if (trellis_controller.display()->are_all_pixels_on()) {
+        return;
+    }
+
+    bool found_blank_pixel = false;
+    int x = RAND.randint(0, X_DIM - 1);;
+    int y = RAND.randint(0, Y_DIM - 1);;
+    while (!found_blank_pixel) {
+        if (!controller.display()->is_pixel_on(x, y)) {
+            found_blank_pixel = true;
+        }
+        // Try again
+        x = RAND.randint(0, X_DIM - 1);
+        y = RAND.randint(0, Y_DIM - 1);
+    }
+    controller.display()->set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
+}
+
 void setup() {
     trellis_hw_interface->begin();
 
@@ -124,6 +143,10 @@ void setup() {
         }
     }
     trellis_controller.set_on_any_key_pressed_callback([&](int x, int y, const Time&) {
+        // Penalize pressing keys that aren't lit up
+        if (!trellis_controller.display()->is_pixel_on(x, y)) {
+            turn_on_random_pixel(trellis_controller);
+        }
         trellis_controller.display()->set_pixel_off(x, y);
         trellis_controller.display()->show();
         // TrellisHWInterface::get_instance()->clear_pixel(x, y);
@@ -160,18 +183,7 @@ void setup() {
             return;
         }
 
-        bool found_blank_pixel = false;
-        int x = RAND.randint(0, X_DIM - 1);;
-        int y = RAND.randint(0, Y_DIM - 1);;
-        while (!found_blank_pixel) {
-            if (!trellis_controller.display()->is_pixel_on(x, y)) {
-                found_blank_pixel = true;
-            }
-            // Try again
-            x = RAND.randint(0, X_DIM - 1);
-            y = RAND.randint(0, Y_DIM - 1);
-        }
-        trellis_controller.display()->set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
+        turn_on_random_pixel(trellis_controller);
         trellis_controller.display()->show();
         // Serial.printf("Timer event @ %.3f s\n", static_cast<double>(now) / 1000);
         if (timer_period_ms > MIN_PERIOD) {
