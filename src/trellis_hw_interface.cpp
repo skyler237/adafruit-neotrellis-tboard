@@ -13,8 +13,8 @@ TrellisHWInterface::TrellisHWInterface()
                Y_DIM / 4,
                X_DIM / 4) { }
 
-TrellisHWInterface& TrellisHWInterface::get_instance() {
-    static TrellisHWInterface instance;
+TrellisHWInterfacePtr TrellisHWInterface::get_instance() {
+    static auto instance = std::make_shared<TrellisHWInterface>();
     return instance;
 }
 
@@ -62,7 +62,7 @@ void TrellisHWInterface::begin() {
             trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
             trellis_.activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
             trellis_.registerCallback(
-                x, y, [](keyEvent event) -> TrellisCallback { return get_instance().key_event_callback(event); });
+                x, y, [](keyEvent event) -> TrellisCallback { return get_instance()->key_event_callback(event); });
         }
     }
 }

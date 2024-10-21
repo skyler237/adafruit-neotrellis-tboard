@@ -9,10 +9,11 @@ default I2C address of 0x2E, and the rightmost board
 having the address of 0x2F (the A0 jumper is soldered)
 */
 
-#include "Adafruit_NeoTrellis.h"
-#include "trellis_hw_interface.h"
-
 #include <Prandom.h>
+
+#include "Adafruit_NeoTrellis.h"
+#include "trellis_controller.h"
+#include "trellis_hw_interface.h"
 
 // #define Y_DIM 4 //number of rows of key
 // #define X_DIM 8 //number of columns of keys
@@ -42,11 +43,12 @@ Adafruit_NeoTrellis t_array[Y_DIM / 4][X_DIM / 4] = {
 // pass this matrix to the multitrellis object
 Adafruit_MultiTrellis trellis((Adafruit_NeoTrellis*)t_array, Y_DIM / 4, X_DIM / 4);
 
-static TrellisHWInterface trellis_hw_interface = TrellisHWInterface::get_instance();
+static TrellisHWInterfacePtr trellis_hw_interface = TrellisHWInterface::get_instance();
+static tboard::TrellisController trellis_controller(trellis_hw_interface);
 
 Adafruit_MultiTrellis& get_trellis() {
     // return trellis;
-    return trellis_hw_interface.get_trellis();
+    return trellis_hw_interface->get_trellis();
 }
 
 // Input a value 0 to 255 to get a color value.
@@ -77,7 +79,7 @@ TrellisCallback blink(keyEvent evt) {
 }
 
 void setup() {
-    trellis_hw_interface.begin();
+    trellis_hw_interface->begin();
 
     // /* the array can be addressed as x,y or with the key number */
     // for(int i=0; i<Y_DIM*X_DIM; i+=X_DIM){
@@ -99,53 +101,86 @@ void setup() {
     //   }
     // }
 
-    // trellis_hw_interface.begin();
+    // trellis_hw_interface->begin();
     for (int i = 0; i < Y_DIM * X_DIM; i++) {
         int x = i % X_DIM;
         int y = i / X_DIM;
-        trellis_hw_interface.set_pixel_color(x, y, wheel_rgb(map(i, 0, X_DIM * Y_DIM, 0, 255))); // addressed with
-                                                                                                 // keynum
-        trellis_hw_interface.show();
+        trellis_controller.display()->set_pixel_color(x, y, wheel_rgb(map(i, 0, X_DIM * Y_DIM, 0, 255))); // addressed
+                                                                                                          // with keynum
+        trellis_controller.display()->show();
         delay(20);
     }
 
     for (int y = 0; y < Y_DIM; y++) {
         for (int x = 0; x < X_DIM; x++) {
             // activate rising and falling edges on all keys
-            //  trellis_hw_interface.activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
-            //  trellis_hw_interface.activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
-            //  trellis_hw_interface.registerCallback(x, y, blink);
-            trellis_hw_interface.clear_pixel(x, y); // addressed with x,y
-            trellis_hw_interface.show();            // show all LEDs
+            //  trellis_hw_interface->activateKey(x, y, SEESAW_KEYPAD_EDGE_RISING, true);
+            //  trellis_hw_interface->activateKey(x, y, SEESAW_KEYPAD_EDGE_FALLING, true);
+            //  trellis_hw_interface->registerCallback(x, y, blink);
+            trellis_controller.display()->set_pixel_off(x, y); // addressed with x,y
+            trellis_controller.display()->show();              // show all LEDs
             delay(20);
             // break;
         }
     }
-    TrellisHWInterface::get_instance().register_on_any_key_pressed_callback([](int x, int y, const Time&) {
-        TrellisHWInterface::get_instance().clear_pixel(x, y);
-        TrellisHWInterface::get_instance().show();
+    trellis_controller.set_on_any_key_pressed_callback([&](int x, int y, const Time&) {
+        trellis_controller.display()->set_pixel_off(x, y);
+        trellis_controller.display()->show();
+        // TrellisHWInterface::get_instance()->clear_pixel(x, y);
+        // TrellisHWInterface::get_instance()->show();
     });
-    // TrellisHWInterface::get_instance().register_on_any_key_released_callback([](int x, int y, const Time&) {
-    //     TrellisHWInterface::get_instance().clear_pixel(x, y);
-    //     TrellisHWInterface::get_instance().show();
+    // TrellisHWInterface::get_instance()->register_on_any_key_released_callback([](int x, int y, const Time&) {
+    //     TrellisHWInterface::get_instance()->clear_pixel(x, y);
+    //     TrellisHWInterface::get_instance()->show();
     // });
 
-    TrellisHWInterface::get_instance().register_timer_callback(1000, [](const Time& now) {
+    trellis_controller.add_timer_callback(1000, [&](const Time& now) {
         static uint16_t timer_period_ms = 1000;
-        const uint16_t MIN_PERIOD = 200;
+        const uint16_t MIN_PERIOD = 150;
 
-        int x = RAND.randint(0, X_DIM - 1);
-        int y = RAND.randint(0, Y_DIM - 1);
-        TrellisHWInterface::get_instance().set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
-        TrellisHWInterface::get_instance().show();
+        static bool is_game_over = false;
+
+        if (is_game_over) {
+            // Blink red
+            if (trellis_controller.display()->are_all_pixels_on()) {
+                trellis_controller.display()->clear();
+            }
+            else {
+                trellis_controller.display()->fill(RGBA{255, 0, 0});
+            }
+            return;
+        }
+
+        // Check for GAME OVER
+        if (trellis_controller.display()->are_all_pixels_on()) {
+            is_game_over = true;
+            trellis_controller.display()->fill(RGBA{255, 0, 0});
+            trellis_controller.display()->show();
+            TrellisHWInterface::get_instance()->set_timer_period(500);
+            return;
+        }
+
+        bool found_blank_pixel = false;
+        int x = RAND.randint(0, X_DIM - 1);;
+        int y = RAND.randint(0, Y_DIM - 1);;
+        while (!found_blank_pixel) {
+            if (!trellis_controller.display()->is_pixel_on(x, y)) {
+                found_blank_pixel = true;
+            }
+            // Try again
+            x = RAND.randint(0, X_DIM - 1);
+            y = RAND.randint(0, Y_DIM - 1);
+        }
+        trellis_controller.display()->set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
+        trellis_controller.display()->show();
         // Serial.printf("Timer event @ %.3f s\n", static_cast<double>(now) / 1000);
         if (timer_period_ms > MIN_PERIOD) {
             timer_period_ms -= 5;
         }
-        TrellisHWInterface::get_instance().set_timer_period(timer_period_ms);
+        TrellisHWInterface::get_instance()->set_timer_period(timer_period_ms);
     });
 }
 
 void loop() {
-    TrellisHWInterface::get_instance().tick();
+    TrellisHWInterface::get_instance()->tick();
 }

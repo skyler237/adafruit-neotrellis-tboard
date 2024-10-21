@@ -18,10 +18,14 @@
 constexpr int X_DIM = 8;
 constexpr int Y_DIM = 8;
 static constexpr uint32_t DEFAULT_TICK_PERIOD_US = 1000;
+class TrellisHWInterface;
+using TrellisHWInterfacePtr = std::shared_ptr<TrellisHWInterface>;
 
 class TrellisHWInterface : public TrellisInterface {
 public:
-    static TrellisHWInterface& get_instance();
+    TrellisHWInterface();
+
+    static TrellisHWInterfacePtr get_instance();
 
     TrellisCallback key_event_callback(keyEvent event);
 
@@ -52,7 +56,6 @@ public:
     void set_timer_period(uint16_t period_ms);
 
 private:
-    explicit TrellisHWInterface();
     Adafruit_MultiTrellis trellis_;
     Grid8x8<tl::optional<OnEventCallback>> on_pressed_callbacks_;
     Grid8x8<tl::optional<OnEventCallback>> on_released_callbacks_;

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Alpha3">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="SkylerArm64-Coder">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="SkylerWorkspace-Coder">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Tom TX2 (wireless) (5d7ee0ea-04f3-4a9a-8779-9467c7760c49)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Tom TX2 (wireless-nointernet) (868250a7-93cc-4bc7-9a61-e995be9a8ddb)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="buildkite agent">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_TinyUSB_Arduino/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/HID" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/USBHost/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Adafruit_ZeroDMA" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SDU/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/samd" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/megaavr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/nrf52" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/avr" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/sam" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Servo/src/stm32f4" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/I2S/src" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/Wire" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SPI" web="/" />
+            <mapping local="$USER_HOME$/.platformio/packages/framework-arduino-samd-adafruit/libraries/SAMD_AnalogCorrection/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
