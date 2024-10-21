@@ -123,7 +123,12 @@ void TrellisHWInterface::tick() {
     trellis_.read();
     if (timer_callback_ && next_timer_time_ > 0 && time_ms_.now() >= next_timer_time_) {
         next_timer_time_ = time_ms_.now() + timer_period_ms_;
-        timer_callback_(time_ms_.now());
+        tl::optional<Duration> maybe_new_period = timer_callback_(time_ms_.now());
+        if (maybe_new_period.has_value()) {
+            const Duration delta_duration = maybe_new_period.value() - timer_period_ms_;
+            timer_period_ms_ = maybe_new_period.value();
+            next_timer_time_ += delta_duration;
+        }
     }
     delayMicroseconds(DEFAULT_TICK_PERIOD_US);
     // if (any_key_callback_) {

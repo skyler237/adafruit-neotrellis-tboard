@@ -12,13 +12,14 @@
 
 // Assume this is milliseconds
 using Time = uint32_t;
+using Duration = uint32_t;
 
 // Used to register a callback for when a specific button is pressed
 using OnEventCallback = std::function<void(const Time&)>;
 // Used to register a callback for when any button is pressed -- provides the x, y coordinates of the button
 using OnAnyKeyEventCallback = std::function<void(int, int, const Time&)>;
-// Used to register a callback for a timer event
-using OnTimerEventCallback = std::function<void(const Time&)>;
+// Used to register a callback for a timer event -- returns the period for the next timer event
+using OnTimerEventCallback = std::function<tl::optional<Duration>(const Time&)>;
 
 
 template<typename T, int rows, int cols>

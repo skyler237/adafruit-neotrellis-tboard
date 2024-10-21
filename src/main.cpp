@@ -157,7 +157,7 @@ void setup() {
     //     TrellisHWInterface::get_instance()->show();
     // });
 
-    trellis_controller.add_timer_callback(1000, [&](const Time& now) {
+    trellis_controller.add_timer_callback(1000, [&](const Time& now) -> tl::optional<Duration> {
         static uint16_t timer_period_ms = 1000;
         const uint16_t MIN_PERIOD = 150;
 
@@ -171,7 +171,7 @@ void setup() {
             else {
                 trellis_controller.display()->fill(RGBA{255, 0, 0});
             }
-            return;
+            return tl::nullopt;
         }
 
         // Check for GAME OVER
@@ -180,7 +180,7 @@ void setup() {
             trellis_controller.display()->fill(RGBA{255, 0, 0});
             trellis_controller.display()->show();
             TrellisHWInterface::get_instance()->set_timer_period(500);
-            return;
+            return 500;
         }
 
         turn_on_random_pixel(trellis_controller);
@@ -189,7 +189,8 @@ void setup() {
         if (timer_period_ms > MIN_PERIOD) {
             timer_period_ms -= 5;
         }
-        TrellisHWInterface::get_instance()->set_timer_period(timer_period_ms);
+
+        return timer_period_ms;
     });
 }
 
