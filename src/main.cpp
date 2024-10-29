@@ -32,6 +32,8 @@ having the address of 0x2F (the A0 jumper is soldered)
 
 Prandom RAND;
 
+constexpr int BRIGHTNESS = 50;
+
 // create a matrix of trellis panels
 Adafruit_NeoTrellis t_array[Y_DIM / 4][X_DIM / 4] = {
 
@@ -79,22 +81,25 @@ TrellisCallback blink(keyEvent evt) {
 }
 
 void turn_on_random_pixel(const tboard::TrellisController& controller) {
+    // Exit early if all pixels are already on
     if (trellis_controller.display()->are_all_pixels_on()) {
         return;
     }
 
-    bool found_blank_pixel = false;
-    int x = RAND.randint(0, X_DIM - 1);;
-    int y = RAND.randint(0, Y_DIM - 1);;
-    while (!found_blank_pixel) {
+    const int max_attempts = 100;
+    int x = RAND.randint(0, X_DIM - 1);
+    int y = RAND.randint(0, Y_DIM - 1);
+    int attempt_cnt = 0;
+    while (attempt_cnt < max_attempts) {
         if (!controller.display()->is_pixel_on(x, y)) {
-            found_blank_pixel = true;
+            break;
         }
         // Try again
         x = RAND.randint(0, X_DIM - 1);
         y = RAND.randint(0, Y_DIM - 1);
+        attempt_cnt++;
     }
-    controller.display()->set_pixel_color(x, y, wheel_rgb(RAND.random(255)));
+    controller.display()->set_pixel_color(x, y, wheel_rgb(RAND.random(255), BRIGHTNESS));
 }
 
 void setup() {
@@ -124,7 +129,7 @@ void setup() {
     for (int i = 0; i < Y_DIM * X_DIM; i++) {
         int x = i % X_DIM;
         int y = i / X_DIM;
-        trellis_controller.display()->set_pixel_color(x, y, wheel_rgb(map(i, 0, X_DIM * Y_DIM, 0, 255))); // addressed
+        trellis_controller.display()->set_pixel_color(x, y, wheel_rgb(map(i, 0, X_DIM * Y_DIM, 0, 255), BRIGHTNESS)); // addressed
                                                                                                           // with keynum
         trellis_controller.display()->show();
         delay(20);
@@ -167,17 +172,17 @@ void setup() {
             // Blink red
             if (trellis_controller.display()->are_all_pixels_on()) {
                 trellis_controller.display()->clear();
+            } else {
+                trellis_controller.display()->fill(RGBA{BRIGHTNESS, 0, 0});
             }
-            else {
-                trellis_controller.display()->fill(RGBA{255, 0, 0});
-            }
+            trellis_controller.display()->show();
             return tl::nullopt;
         }
 
         // Check for GAME OVER
         if (trellis_controller.display()->are_all_pixels_on()) {
             is_game_over = true;
-            trellis_controller.display()->fill(RGBA{255, 0, 0});
+            trellis_controller.display()->fill(RGBA{BRIGHTNESS, 0, 0});
             trellis_controller.display()->show();
             TrellisHWInterface::get_instance()->set_timer_period(500);
             return 500;
