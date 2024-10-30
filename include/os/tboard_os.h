@@ -23,7 +23,7 @@ public:
 //        requires std::derived_from<AppT, Application>
     void register_app();
     void set_startup_app(const tboard::ApplicationId& application_id);
-    void run();
+    void start();
 
 private:
     std::shared_ptr<tboard::TrellisController> trellis_controller_;
@@ -33,7 +33,7 @@ private:
 
     Time next_tick_time_{0};
 
-    void run_timer_callback(const Time& now);
+    Duration run_timer_callback(const Time& now);
     void switch_to_app(const ApplicationId& to_app);
 };
 

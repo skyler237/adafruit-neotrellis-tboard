@@ -17,7 +17,7 @@ void tboard::run_games(TrellisInterfacePtr trellis_interface) {
     tboard.register_app<apps::SplashScreen>();
     tboard.register_app<apps::RandomColorToggle>();
     tboard.register_app<apps::ColoringPad>();
-    tboard.set_startup_app(apps::COLORING_PAD_ID);
-    tboard.run();
+    tboard.set_startup_app(apps::SPLASHSCREEN_ID);
+    tboard.start();
     // QApplication::exec();
 }

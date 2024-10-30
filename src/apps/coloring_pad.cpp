@@ -4,11 +4,11 @@
 //
 
 #include "apps/coloring_pad.h"
+
 #include "apps/application_ids.h"
 
 namespace tboard::apps {
-ColorPicker::ColorPicker(TrellisDisplayPtr display)
-    : display_(std::move(display)) {
+ColorPicker::ColorPicker(TrellisDisplayPtr display) : display_(std::move(display)) {
     /// Setup colors -- this is the brighest version, for when selected
     // TODO: maybe distinguish between selected, unselected, and paint colors
     // Red
@@ -66,18 +66,22 @@ void ColoringPad::init() {
     color_picker_ = std::make_shared<ColorPicker>(trellis_controller_->display());
     color_picker_->draw();
 
+    trellis_controller_->display()->show();
+
     // Setup callbacks
     trellis_controller_->set_on_any_key_pressed_callback([this](int x, int y, const Time&) {
         if (y == ColorPicker::COLOR_PICKER_ROW) {
             color_picker_->handle_button_pressed(x, y);
-        }
-        else if (color_picker_->get_selected_color().has_value()) {
+        } else if (color_picker_->get_selected_color().has_value()) {
             trellis_controller_->display()->set_pixel_color(x, y, color_picker_->get_selected_color().value());
+            trellis_controller_->display()->show();
         }
     });
 }
 
-void ColoringPad::exit() {}
+void ColoringPad::exit() { }
 
-tl::optional<ApplicationId> ColoringPad::tick(const Time&) { return tl::nullopt; }
+tl::optional<ApplicationId> ColoringPad::tick(const Time&) {
+    return tl::nullopt;
+}
 } // namespace tboard::apps
