@@ -15,6 +15,15 @@ having the address of 0x2F (the A0 jumper is soldered)
 #include "trellis_controller.h"
 #include "trellis_hw_interface.h"
 
+
+#include "tboard_games.h"
+
+
+#include "apps/application_ids.h"
+#include "apps/splash_screen.h"
+#include "apps/coloring_pad.h"
+#include "apps/random_color_toggle.h"
+
 // #define Y_DIM 4 //number of rows of key
 // #define X_DIM 8 //number of columns of keys
 
@@ -32,7 +41,7 @@ having the address of 0x2F (the A0 jumper is soldered)
 
 Prandom RAND;
 
-constexpr int BRIGHTNESS = 50;
+constexpr int BRIGHTNESS = 20;
 
 // create a matrix of trellis panels
 Adafruit_NeoTrellis t_array[Y_DIM / 4][X_DIM / 4] = {

@@ -8,7 +8,8 @@
 #define TBOARD_COLORS_H
 
 #include <cstdint>
-#include <NColor.h>
+
+#include "RGBA.h"
 
 
 RGBA wheel_rgb(uint8_t wheel_pos, uint8_t brightness = 255);
