@@ -5,6 +5,8 @@
 
 #include "apps/random_color_toggle.h"
 
+#include <USB/USBAPI.h>
+
 #include <iostream>
 #include <random>
 
@@ -36,12 +38,6 @@ void RandomColorToggle::init() {
         trellis_controller_->display()->toggle_pixel(x, y, get_random_color());;
         trellis_controller_->display()->show();
     });
-
-    trellis_controller_->register_on_pressed_callback(0,
-                                                      0,
-                                                      [this](const Time&) {
-                                                          switch_to_app(COLORING_PAD_ID);
-                                                      });
 }
 
 void RandomColorToggle::exit() {

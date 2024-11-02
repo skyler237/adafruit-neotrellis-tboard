@@ -39,7 +39,6 @@ void TBoardOS::switch_to_app(const ApplicationId& to_app) {
 
 Duration TBoardOS::run_timer_callback(const Time& now) {
     tl::optional<ApplicationId> maybe_next_app;
-    Serial.printf("TBoardOS::run_timer_callback: now=%lu, current_app=%s\n", now, current_app_->get_id().name.c_str());
     // Run the current app's tick function
     maybe_next_app = current_app_->tick(now);
     // Check for a request to switch to a new app

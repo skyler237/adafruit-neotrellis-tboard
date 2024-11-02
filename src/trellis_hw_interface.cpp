@@ -109,10 +109,12 @@ void TrellisHWInterface::register_timer_callback(const int period_ms, OnTimerEve
 void TrellisHWInterface::clear_callbacks() {
     for (int x = 0; x < X_DIM; ++x) {
         for (int y = 0; y < Y_DIM; ++y) {
-            register_on_pressed_callback(x, y, {});
+            on_pressed_callbacks_(x, y) = tl::nullopt;
+            on_released_callbacks_(x, y) = tl::nullopt;
         }
     }
-    register_on_any_key_pressed_callback({});
+    any_key_pressed_callback_ = {};
+    any_key_released_callback_ = {};
 }
 
 void TrellisHWInterface::show() {

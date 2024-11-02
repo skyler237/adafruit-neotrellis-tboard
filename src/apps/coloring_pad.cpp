@@ -12,21 +12,21 @@ ColorPicker::ColorPicker(TrellisDisplayPtr display) : display_(std::move(display
     /// Setup colors -- this is the brighest version, for when selected
     // TODO: maybe distinguish between selected, unselected, and paint colors
     // Red
-    colors_[0] = RGBA{255, 0, 0};
+    colors_[0] = RED;
     // Orange
-    colors_[1] = RGBA{255, 128, 0};
+    colors_[1] = ORANGE_RED;
     // Yellow
-    colors_[2] = RGBA{255, 255, 0};
+    colors_[2] = YELLOW;
     // Green
-    colors_[3] = RGBA{0, 255, 0};
+    colors_[3] = GREEN;
     // Blue
-    colors_[4] = RGBA{0, 0, 255};
+    colors_[4] = BLUE;
     // Magenta
-    colors_[5] = RGBA{255, 0, 255};
+    colors_[5] = PURPLE;
     // White
-    colors_[6] = RGBA{255, 255, 255};
+    colors_[6] = WHITE;
     // Eraser
-    colors_[7] = RGBA{0, 0, 0};
+    colors_[7] = BLACK;
 }
 
 void ColorPicker::handle_button_pressed(int x, int y) {

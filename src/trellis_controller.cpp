@@ -88,7 +88,7 @@ void TrellisController::add_timer_callback(const int period_ms, OnTimerEventCall
     interface_->register_timer_callback(period_ms, std::move(callback));
 }
 
-void TrellisController::clear_callbacks() {
+void TrellisController::clear_callbacks() const {
     interface_->clear_callbacks();
 }
 

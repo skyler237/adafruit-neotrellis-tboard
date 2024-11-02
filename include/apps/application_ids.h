@@ -6,6 +6,8 @@
 #ifndef TBOARD_APPLICATION_IDS_H
 #define TBOARD_APPLICATION_IDS_H
 
+#include <vector>
+
 #include "os/application.h"
 
 namespace tboard::apps {
@@ -23,6 +25,11 @@ static const ApplicationId COLORING_PAD_ID{
 static const ApplicationId RANDOM_COLOR_TOGGLE_ID{
     .id = 2,
     .name = "Random Color Toggle"
+};
+
+static const ApplicationId APPLICATION_PICKER_ID{
+    .id = 3,
+    .name = "Application Picker"
 };
 } // namespace tboard::apps
 #endif // TBOARD_APPLICATION_IDS_H

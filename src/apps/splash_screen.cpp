@@ -46,7 +46,7 @@ tl::optional<ApplicationId> SplashScreen::tick(const Time& now) {
         pixel_idx_++;
         trellis_controller_->display()->show();
     } else {
-        return COLORING_PAD_ID;
+        return APPLICATION_PICKER_ID;
     }
     return tl::nullopt;
 }
