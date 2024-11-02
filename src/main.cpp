@@ -13,6 +13,7 @@ having the address of 0x2F (the A0 jumper is soldered)
 */
 
 #include <apps/application_picker.h>
+#include <apps/lights_out.h>
 
 #include <Prandom.h>
 
@@ -120,6 +121,7 @@ void setup() {
     tboard_os.register_app<tboard::apps::SplashScreen>();
     tboard_os.register_app<tboard::apps::ApplicationPicker>();
     tboard_os.register_app<tboard::apps::RandomColorToggle>();
+    tboard_os.register_app<tboard::apps::LightsOut>();
     tboard_os.register_app<tboard::apps::ColoringPad>();
     tboard_os.set_startup_app(tboard::apps::SPLASHSCREEN_ID);
     tboard_os.start();

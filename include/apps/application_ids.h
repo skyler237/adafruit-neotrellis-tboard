@@ -31,5 +31,10 @@ static const ApplicationId APPLICATION_PICKER_ID{
     .id = 3,
     .name = "Application Picker"
 };
+
+static const ApplicationId LIGHTS_OUT_ID{
+    .id = 4,
+    .name = "Lights Out"
+};
 } // namespace tboard::apps
 #endif // TBOARD_APPLICATION_IDS_H

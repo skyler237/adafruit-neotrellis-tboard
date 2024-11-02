@@ -7,23 +7,25 @@
 #ifndef TBOARD_APPS_APPLICATION_PICKER_H
 #define TBOARD_APPS_APPLICATION_PICKER_H
 
-#include "os/application.h"
-#include "apps/application_ids.h"
-
 #include <map>
+
+#include "apps/application_ids.h"
+#include "os/application.h"
 
 namespace tboard::apps {
 
 // Define the order and color for each application that will show up
 static const std::vector<std::pair<ApplicationId, RGBA>> APPLICATION_LIST = {
-    {COLORING_PAD_ID, BLUE},
+    {       COLORING_PAD_ID,   BLUE},
     {RANDOM_COLOR_TOGGLE_ID, PURPLE},
+    {         LIGHTS_OUT_ID,  GREEN},
 };
 
 class ApplicationPicker : public Application {
 public:
-    ApplicationPicker(const TrellisControllerPtr& trellis_controller, const ApplicationSwitcherPtr& application_switcher)
-        : Application(trellis_controller, application_switcher) {}
+    ApplicationPicker(const TrellisControllerPtr& trellis_controller,
+                      const ApplicationSwitcherPtr& application_switcher)
+        : Application(trellis_controller, application_switcher) { }
 
     ~ApplicationPicker() override;
 

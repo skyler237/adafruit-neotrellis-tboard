@@ -20,19 +20,21 @@ public:
     void set_pixel_color(int x, int y, RGBA color, float brightness = 1.0);
 
     // Sets the pixel to fully on (white)
-    void set_pixel_on(int x, int y);
+    void set_pixel_on(int x, int y, float brightness = 1.0);
 
     // Clears the pixel
     void set_pixel_off(int x, int y);
 
     // Toggle the pixel on or off
-    void toggle_pixel(int x, int y, tl::optional<RGBA> color = tl::nullopt);
+    void toggle_pixel(int x, int y, tl::optional<RGBA> color = tl::nullopt, float brightness = 1.0);
 
     RGBA get_pixel_color(int x, int y) const;
 
     bool is_pixel_on(int x, int y) const;
 
     bool are_all_pixels_on() const;
+
+    bool are_all_pixels_off() const;
 
     // Turn all pixels off
     void clear();
@@ -46,7 +48,7 @@ private:
     TrellisInterfacePtr interface_;
     Grid8x8<RGBA> pixel_colors_;
 
-    static RGBA set_brightness(RGBA color, float brightness);
+    static RGBA get_color_at_brightness(RGBA color, float brightness);
 };
 
 inline bool TrellisDisplay::are_all_pixels_on() const {
