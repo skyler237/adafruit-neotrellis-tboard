@@ -30,7 +30,7 @@ void TrellisDisplay::toggle_pixel(int x, int y, tl::optional<RGBA> color, float 
         set_pixel_off(x, y);
     } else {
         if (color.has_value()) {
-            set_pixel_color(x, y, color.value());
+            set_pixel_color(x, y, color.value(), brightness);
         } else {
             set_pixel_on(x, y, brightness);
         }

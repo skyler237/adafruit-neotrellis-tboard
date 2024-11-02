@@ -13,7 +13,7 @@
 
 namespace tboard::apps {
 namespace {
-constexpr float BRIGHTNESS = 0.3;
+constexpr float BRIGHTNESS = 0.05;
 const auto COLOR = GREEN;
 } // namespace
 
@@ -105,7 +105,7 @@ tl::optional<ApplicationId> LightsOut::tick(const Time& now) {
             for (int x = x_min; x <= x_max; x++) {
                 for (int y = y_min; y <= y_max; y++) {
                     if (x == x_min || x == x_max || y == y_min || y == y_max) {
-                        trellis_controller_->display()->toggle_pixel(x, y, animation_colors[animation_idx], BRIGHTNESS);
+                        trellis_controller_->display()->set_pixel_color(x, y, animation_colors[animation_idx], BRIGHTNESS);
                     }
                 }
             }

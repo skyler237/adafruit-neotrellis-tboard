@@ -30,7 +30,7 @@ private:
     std::uniform_int_distribution<> distribution_;
     GameState game_state_{GameState::INITIALIZING};
 
-    static constexpr int INITIALIZATION_TOGGLE_COUNT = 50;
+    static constexpr int INITIALIZATION_TOGGLE_COUNT = 80;
     int initialization_toggle_counter_{0};
 
     int win_animation_counter_{0};
