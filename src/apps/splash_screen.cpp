@@ -10,8 +10,9 @@
 #include <iostream>
 
 #include "apps/application_ids.h"
-//#include "apps/coloring_pad.h"
-//#include "apps/random_color_toggle.h"
+
+// #include "apps/coloring_pad.h"
+// #include "apps/random_color_toggle.h"
 
 namespace tboard::apps {
 SplashScreen::~SplashScreen() = default;
@@ -33,11 +34,12 @@ void SplashScreen::exit() { }
 
 tl::optional<ApplicationId> SplashScreen::tick(const Time& now) {
     if (pixel_idx_ < 64) {
-    const int x = pixel_idx_ % 8;
-    const int y = pixel_idx_ / 8;
+        const int x = pixel_idx_ % 8;
+        const int y = pixel_idx_ / 8;
 
         // Set pixel color
-        trellis_controller_->display()->set_pixel_color(x, y, wheel_rgb(map(pixel_idx_, 0, 8 * 8, 0, 255), 50)); // addressed
+        trellis_controller_->display()->set_pixel_color(
+            x, y, wheel_rgb(map(pixel_idx_, 0, 8 * 8, 0, 255), 50)); // addressed
         //
         // trellis_controller_->display()->set_pixel_color(pixel_idx_ % 8,
         //                                                 pixel_idx_ / 8,

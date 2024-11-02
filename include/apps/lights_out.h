@@ -13,11 +13,7 @@ namespace tboard::apps {
 
 class LightsOut final : public Application {
 public:
-    enum class GameState : uint8_t {
-        INITIALIZING,
-        IN_PROGRESS,
-        WON
-    };
+    enum class GameState : uint8_t { INITIALIZING, IN_PROGRESS, WON };
     ~LightsOut() override;
 
     LightsOut(const TrellisControllerPtr& trellis_controller, const ApplicationSwitcherPtr& application_switcher);

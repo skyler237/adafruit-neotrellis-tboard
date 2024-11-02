@@ -12,29 +12,14 @@
 
 namespace tboard::apps {
 
-static const ApplicationId SPLASHSCREEN_ID{
-    .id = 0,
-    .name = "Splash Screen"
-};
+static const ApplicationId SPLASHSCREEN_ID{.id = 0, .name = "Splash Screen"};
 
-static const ApplicationId COLORING_PAD_ID{
-    .id = 1,
-    .name = "Coloring Pad"
-};
+static const ApplicationId COLORING_PAD_ID{.id = 1, .name = "Coloring Pad"};
 
-static const ApplicationId RANDOM_COLOR_TOGGLE_ID{
-    .id = 2,
-    .name = "Random Color Toggle"
-};
+static const ApplicationId RANDOM_COLOR_TOGGLE_ID{.id = 2, .name = "Random Color Toggle"};
 
-static const ApplicationId APPLICATION_PICKER_ID{
-    .id = 3,
-    .name = "Application Picker"
-};
+static const ApplicationId APPLICATION_PICKER_ID{.id = 3, .name = "Application Picker"};
 
-static const ApplicationId LIGHTS_OUT_ID{
-    .id = 4,
-    .name = "Lights Out"
-};
+static const ApplicationId LIGHTS_OUT_ID{.id = 4, .name = "Lights Out"};
 } // namespace tboard::apps
 #endif // TBOARD_APPLICATION_IDS_H

@@ -16,10 +16,12 @@ struct ApplicationId {
     std::string name;
 
     friend bool operator<(const ApplicationId& lhs, const ApplicationId& rhs) {
-        if (lhs.id < rhs.id)
+        if (lhs.id < rhs.id) {
             return true;
-        if (rhs.id < lhs.id)
+        }
+        if (rhs.id < lhs.id) {
             return false;
+        }
         return lhs.name < rhs.name;
     }
 };
@@ -36,6 +38,7 @@ public:
 private:
     ApplicationChangeRequestCallback on_application_change_request_callback_;
 };
+
 using ApplicationSwitcherPtr = std::shared_ptr<ApplicationSwitcher>;
 
 /// Base class for all applications
@@ -67,6 +70,7 @@ protected:
 private:
     const ApplicationSwitcherPtr application_switcher_;
 };
+
 using ApplicationPtr = std::shared_ptr<Application>;
 
 } // namespace tboard

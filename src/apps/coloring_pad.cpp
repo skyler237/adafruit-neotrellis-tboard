@@ -78,7 +78,8 @@ void ColoringPad::init() {
         if (y == ColorPicker::COLOR_PICKER_ROW) {
             color_picker_->handle_button_pressed(x, y);
         } else if (color_picker_->get_selected_color().has_value()) {
-            trellis_controller_->display()->set_pixel_color(x, y, color_picker_->get_selected_color().value(), DEFAULT_COLOR_PAD_BRIGHTNESS);
+            trellis_controller_->display()->set_pixel_color(
+                x, y, color_picker_->get_selected_color().value(), DEFAULT_COLOR_PAD_BRIGHTNESS);
             trellis_controller_->display()->show();
         }
     });

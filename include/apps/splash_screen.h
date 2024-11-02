@@ -8,6 +8,7 @@
 #define TBOARD_APPS_SPLASH_SCREEN_H
 
 #include "os/application.h"
+
 // #include "includes.h"
 
 namespace tboard::apps {
@@ -15,7 +16,7 @@ namespace tboard::apps {
 class SplashScreen : public Application {
 public:
     SplashScreen(const TrellisControllerPtr& trellis_controller, const ApplicationSwitcherPtr& application_switcher)
-        : Application(trellis_controller, application_switcher) {}
+        : Application(trellis_controller, application_switcher) { }
 
     ~SplashScreen() override;
 

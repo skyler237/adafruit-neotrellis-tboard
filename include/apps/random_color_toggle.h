@@ -7,11 +7,11 @@
 #ifndef TBOARD_APPS_RANDOM_COLOR_TOGGLE_H
 #define TBOARD_APPS_RANDOM_COLOR_TOGGLE_H
 
-#include "os/application.h"
 #include <random>
 
-namespace tboard::apps {
+#include "os/application.h"
 
+namespace tboard::apps {
 
 class RandomColorToggle final : public Application {
 public:
@@ -32,7 +32,6 @@ private:
     std::uniform_int_distribution<> distribution_;
 
     RGBA get_random_color();
-
 };
 
 } // namespace tboard::apps

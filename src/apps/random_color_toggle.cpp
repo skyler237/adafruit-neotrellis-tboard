@@ -11,6 +11,7 @@
 #include <random>
 
 #include "apps/application_ids.h"
+
 // #include "includes.h"
 
 namespace tboard::apps {
@@ -25,9 +26,13 @@ RandomColorToggle::RandomColorToggle(const TrellisControllerPtr& trellis_control
     std::uniform_int_distribution<> dis(0, 255);
 }
 
-ApplicationId RandomColorToggle::get_id() const { return RANDOM_COLOR_TOGGLE_ID; }
+ApplicationId RandomColorToggle::get_id() const {
+    return RANDOM_COLOR_TOGGLE_ID;
+}
 
-int RandomColorToggle::get_tick_period_ms() const { return 0; }
+int RandomColorToggle::get_tick_period_ms() const {
+    return 0;
+}
 
 void RandomColorToggle::init() {
     trellis_controller_->display()->clear();
@@ -35,7 +40,8 @@ void RandomColorToggle::init() {
     // trellis_controller_->clear_callbacks();
     trellis_controller_->set_on_any_key_pressed_callback([this](int x, int y, const Time&) {
         // Generate random color
-        trellis_controller_->display()->toggle_pixel(x, y, get_random_color());;
+        trellis_controller_->display()->toggle_pixel(x, y, get_random_color());
+        ;
         trellis_controller_->display()->show();
     });
 }
@@ -49,6 +55,8 @@ tl::optional<ApplicationId> RandomColorToggle::tick(const Time& now) {
 }
 
 RGBA RandomColorToggle::get_random_color() {
-    return RGBA{static_cast<uint8_t>(distribution_(generator_)), static_cast<uint8_t>(distribution_(generator_)), static_cast<uint8_t>(distribution_(generator_))};
+    return RGBA{static_cast<uint8_t>(distribution_(generator_)),
+                static_cast<uint8_t>(distribution_(generator_)),
+                static_cast<uint8_t>(distribution_(generator_))};
 }
 } // namespace tboard::apps
