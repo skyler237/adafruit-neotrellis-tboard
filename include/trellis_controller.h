@@ -17,7 +17,7 @@ class TrellisDisplay {
 public:
     explicit TrellisDisplay(TrellisInterfacePtr trellis_interface);
 
-    void set_pixel_color(int x, int y, RGBA color);
+    void set_pixel_color(int x, int y, RGBA color, float brightness = 1.0);
 
     // Sets the pixel to fully on (white)
     void set_pixel_on(int x, int y);
@@ -45,6 +45,8 @@ public:
 private:
     TrellisInterfacePtr interface_;
     Grid8x8<RGBA> pixel_colors_;
+
+    static RGBA set_brightness(RGBA color, float brightness);
 };
 
 inline bool TrellisDisplay::are_all_pixels_on() const {

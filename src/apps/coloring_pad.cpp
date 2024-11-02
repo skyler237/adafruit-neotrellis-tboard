@@ -33,6 +33,7 @@ void ColorPicker::handle_button_pressed(int x, int y) {
     if (y == COLOR_PICKER_ROW) {
         selected_color_ = colors_[x];
         selected_color_idx_ = x;
+        draw();
     }
 }
 
@@ -42,9 +43,13 @@ tl::optional<RGBA> ColorPicker::get_selected_color() const {
 
 void ColorPicker::draw() const {
     for (int i = 0; i < 8; ++i) {
-        // todo: distinguish between selected and unselected colors
-        display_->set_pixel_color(i, COLOR_PICKER_ROW, colors_[i]);
+        float brightness = DEFAULT_COLOR_PAD_BRIGHTNESS;
+        if (selected_color_idx_ == i) {
+            brightness = 1.0;
+        }
+        display_->set_pixel_color(i, COLOR_PICKER_ROW, colors_[i], brightness);
     }
+    display_->show();
 }
 
 ColoringPad::~ColoringPad() = default;
@@ -73,7 +78,7 @@ void ColoringPad::init() {
         if (y == ColorPicker::COLOR_PICKER_ROW) {
             color_picker_->handle_button_pressed(x, y);
         } else if (color_picker_->get_selected_color().has_value()) {
-            trellis_controller_->display()->set_pixel_color(x, y, color_picker_->get_selected_color().value());
+            trellis_controller_->display()->set_pixel_color(x, y, color_picker_->get_selected_color().value(), DEFAULT_COLOR_PAD_BRIGHTNESS);
             trellis_controller_->display()->show();
         }
     });

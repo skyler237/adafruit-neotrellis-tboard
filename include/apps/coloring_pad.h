@@ -10,6 +10,8 @@
 
 namespace tboard::apps {
 
+static constexpr float DEFAULT_COLOR_PAD_BRIGHTNESS = 0.1;
+
 class ColorPicker {
 public:
     // This is the row where the color picker is located

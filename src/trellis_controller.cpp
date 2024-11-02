@@ -8,11 +8,12 @@
 #include <iostream>
 
 namespace tboard {
-TrellisDisplay::TrellisDisplay(TrellisInterfacePtr trellis_interface)
-    : interface_(std::move(trellis_interface)), pixel_colors_() {}
+TrellisDisplay::TrellisDisplay(TrellisInterfacePtr trellis_interface) : interface_(std::move(trellis_interface)) { }
 
-void TrellisDisplay::set_pixel_color(int x, int y, RGBA color) {
-    interface_->set_pixel_color(x, y, color.colors.red, color.colors.green, color.colors.blue);
+void TrellisDisplay::set_pixel_color(const int x, const int y, RGBA color, float brightness) {
+    const RGBA adjusted_color = set_brightness(color, brightness);
+    interface_->set_pixel_color(
+        x, y, adjusted_color.colors.red, adjusted_color.colors.green, adjusted_color.colors.blue);
     pixel_colors_(x, y) = color;
 }
 
@@ -41,7 +42,8 @@ RGBA TrellisDisplay::get_pixel_color(int x, int y) const {
 }
 
 bool TrellisDisplay::is_pixel_on(int x, int y) const {
-    return get_pixel_color(x, y).colors.red > 0 || get_pixel_color(x, y).colors.green > 0 || get_pixel_color(x, y).colors.blue > 0;
+    return get_pixel_color(x, y).colors.red > 0 || get_pixel_color(x, y).colors.green > 0 ||
+           get_pixel_color(x, y).colors.blue > 0;
 }
 
 void TrellisDisplay::clear() {
@@ -56,8 +58,15 @@ void TrellisDisplay::show() const {
     interface_->show();
 }
 
+RGBA TrellisDisplay::set_brightness(RGBA color, float brightness) {
+    return {static_cast<uint8_t>(color.colors.red * brightness),
+            static_cast<uint8_t>(color.colors.green * brightness),
+            static_cast<uint8_t>(color.colors.blue * brightness),
+            color.colors.alpha};
+}
+
 TrellisController::TrellisController(TrellisInterfacePtr trellis_interface)
-    : interface_(std::move(trellis_interface)), trellis_display_(std::make_shared<TrellisDisplay>(interface_)) {}
+    : interface_(std::move(trellis_interface)), trellis_display_(std::make_shared<TrellisDisplay>(interface_)) { }
 
 void TrellisController::register_on_pressed_callback(int x, int y, OnEventCallback callback) const {
     interface_->register_on_pressed_callback(x, y, std::move(callback));
@@ -76,11 +85,11 @@ void TrellisController::set_on_any_key_released_callback(OnAnyKeyEventCallback c
 }
 
 void TrellisController::add_timer_callback(const int period_ms, OnTimerEventCallback callback) const {
-        interface_->register_timer_callback(period_ms, std::move(callback));
+    interface_->register_timer_callback(period_ms, std::move(callback));
 }
 
 void TrellisController::clear_callbacks() {
-interface_->clear_callbacks();
+    interface_->clear_callbacks();
 }
 
 } // namespace tboard
