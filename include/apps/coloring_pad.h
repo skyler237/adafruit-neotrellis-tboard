@@ -10,7 +10,7 @@
 
 namespace tboard::apps {
 
-static constexpr float DEFAULT_COLOR_PAD_BRIGHTNESS = 0.1;
+static constexpr float DEFAULT_COLOR_PAD_BRIGHTNESS = 0.2;
 
 class ColorPicker {
 public:
