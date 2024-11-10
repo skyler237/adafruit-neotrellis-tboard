@@ -12,7 +12,7 @@
 namespace tboard::apps {
 
 
-constexpr float LPF_ALPHA = 0.01;
+constexpr float LPF_ALPHA = 0.05;
 
 class BatteryBar {
 public:

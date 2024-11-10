@@ -8,6 +8,7 @@
 #include "apps/battery.h"
 
 #include <USB/USBAPI.h>
+#include <resources/minifont.h>
 
 #include <utility>
 #include <variant.h>
@@ -106,6 +107,8 @@ void Battery::display_percentage_text(float battery_percentage) const {
     constexpr int TEXT_X1 = 1;
     constexpr int TEXT_X2 = 5;
 
+    trellis_controller_->display()->clear_region(0, TEXT_Y, 8, minifont::CHAR_HEIGHT);
+
     // Single digit
     if (integer_percent >= 100) {
         // Draw "100"
@@ -122,7 +125,6 @@ void Battery::display_percentage_text(float battery_percentage) const {
 }
 
 void Battery::display_battery_percentage(float battery_percentage) const {
-    trellis_controller_->display()->clear();
 
     battery_bar_.display_battery_percentage(battery_percentage);
 

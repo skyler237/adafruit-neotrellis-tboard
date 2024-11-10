@@ -28,6 +28,10 @@ void TrellisController::set_on_any_key_released_callback(OnAnyKeyEventCallback c
     interface_->register_on_any_key_released_callback(std::move(callback));
 }
 
+void TrellisController::set_on_any_key_held_callback(Duration hold_duration_ms, OnAnyKeyEventCallback callback) const {
+
+}
+
 void TrellisController::add_timer_callback(const int period_ms, OnTimerEventCallback callback) const {
     interface_->register_timer_callback(period_ms, std::move(callback));
 }

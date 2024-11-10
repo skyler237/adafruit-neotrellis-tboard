@@ -36,6 +36,8 @@ public:
     // Turn all pixels off
     void clear();
 
+    void clear_region(int x, int y, int width, int height);
+
     void fill(RGBA color);
 
     // Text handling

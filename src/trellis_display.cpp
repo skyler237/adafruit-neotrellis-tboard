@@ -11,6 +11,11 @@ namespace tboard {
 TrellisDisplay::TrellisDisplay(TrellisInterfacePtr trellis_interface) : interface_(std::move(trellis_interface)) { }
 
 void TrellisDisplay::set_pixel_color(const int x, const int y, RGBA color, float brightness) {
+    // Check bounds
+    if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+        return;
+    }
+
     const RGBA adjusted_color = get_color_at_brightness(color, brightness);
     interface_->set_pixel_color(
         x, y, adjusted_color.colors.red, adjusted_color.colors.green, adjusted_color.colors.blue);
@@ -65,7 +70,13 @@ void TrellisDisplay::clear() {
     }
 }
 
-
+void TrellisDisplay::clear_region(int x, int y, int width, int height) {
+    for (int i = x; i < x + width; ++i) {
+        for (int j = y; j < y + height; ++j) {
+            set_pixel_off(i, j);
+        }
+    }
+}
 
 void TrellisDisplay::draw_character(int x, int y, char c, RGBA color, float brightness) {
     minifont::Bitmap bitmap = minifont::get_bitmap(c);
@@ -88,4 +99,4 @@ RGBA TrellisDisplay::get_color_at_brightness(RGBA color, float brightness) {
             static_cast<uint8_t>(color.colors.blue * brightness),
             color.colors.alpha};
 }
-}  // namespace tboard
+} // namespace tboard

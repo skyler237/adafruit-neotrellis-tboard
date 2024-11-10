@@ -24,6 +24,7 @@ public:
     void register_on_released_callback(int x, int y, OnEventCallback callback) const;
     void set_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) const;
     void set_on_any_key_released_callback(OnAnyKeyEventCallback callback) const;
+    void set_on_any_key_held_callback(Duration hold_duration_ms, OnAnyKeyEventCallback callback) const;
     void add_timer_callback(int period_ms, OnTimerEventCallback callback) const;
     void clear_callbacks() const;
 
