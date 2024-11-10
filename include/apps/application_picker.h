@@ -16,6 +16,7 @@ namespace tboard::apps {
 
 // Define the order and color for each application that will show up
 static const std::vector<std::pair<ApplicationId, RGBA>> APPLICATION_LIST = {
+    {            BATTERY_ID,    RED},
     {       COLORING_PAD_ID,   BLUE},
     {RANDOM_COLOR_TOGGLE_ID, PURPLE},
     {         LIGHTS_OUT_ID,  GREEN},

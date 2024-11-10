@@ -13,6 +13,8 @@
 
 RGBA wheel_rgb(uint8_t wheel_pos, uint8_t brightness = 255);
 
+RGBA interpolate_color(const RGBA& from_color, const RGBA& to_color, float ratio);
+
 // Named colors
 static const RGBA BLACK = {0, 0, 0, 255};
 static const RGBA WHITE = {255, 255, 255, 255};
