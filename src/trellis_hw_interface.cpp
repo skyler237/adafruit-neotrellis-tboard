@@ -158,7 +158,6 @@ void TrellisHWInterface::tick() {
     }
     // Check for held keys
     for (const auto& key_hold_time : get_key_hold_times(time_ms_.now())) {
-        Serial.printf("key held: %d, %d, %d\n", key_hold_time.x, key_hold_time.y, key_hold_time.hold_duration);
         // Check if any key held callbacks should be called
         for (const auto& [hold_duration, callback] : any_key_held_callbacks_) {
             // Since durations are in order, we can break early
