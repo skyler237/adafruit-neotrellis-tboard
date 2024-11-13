@@ -29,7 +29,7 @@ void ApplicationPicker::init() {
     trellis_controller_->display()->show();
 
     // Setup callbacks
-    trellis_controller_->set_on_any_key_pressed_callback([this](int x, int y, const Time&) {
+    trellis_controller_->add_on_any_key_pressed_callback([this](int x, int y, const Time&) {
         int idx = y * 8 + x;
         if (idx < APPLICATION_LIST.size()) {
             switch_to_app(APPLICATION_LIST[idx].first);

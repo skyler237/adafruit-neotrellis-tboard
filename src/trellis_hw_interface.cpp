@@ -51,6 +51,7 @@ TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
         for (const auto& cb : any_key_pressed_callbacks_) {
             cb(x, y, time_ms_.now());
         }
+        key_pressed_times_(x, y) = time_ms_.now();
     } else if (event.bit.EDGE == SEESAW_KEYPAD_EDGE_FALLING) {
         for (const auto& cb : on_released_callbacks_(x, y)) {
             cb(time_ms_.now());
@@ -58,6 +59,7 @@ TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
         for (const auto& cb : any_key_released_callbacks_) {
             cb(x, y, time_ms_.now());
         }
+        key_pressed_times_(x, y) = tl::nullopt;
     }
     return nullptr;
 }
@@ -116,6 +118,17 @@ void TrellisHWInterface::add_on_any_key_released_callback(OnAnyKeyEventCallback 
     any_key_released_callbacks_.emplace_back(std::move(callback));
 }
 
+void TrellisHWInterface::add_on_any_key_held_callback(Duration hold_duration, OnAnyKeyEventCallback callback) {
+    any_key_held_callbacks_.emplace(hold_duration, std::move(callback));
+}
+
+void TrellisHWInterface::add_on_key_held_callback(Duration hold_duration,
+                                               const int x,
+                                               const int y,
+                                               OnEventCallback callback) {
+    key_held_callbacks_(x, y).emplace(hold_duration, std::move(callback));
+}
+
 void TrellisHWInterface::add_timer(const int period_ms, OnTimerEventCallback callback) {
     timers_.emplace_back(period_ms, std::move(callback));
 }
@@ -125,10 +138,12 @@ void TrellisHWInterface::clear_callbacks() {
         for (int y = 0; y < Y_DIM; ++y) {
             on_pressed_callbacks_(x, y).clear();
             on_released_callbacks_(x, y).clear();
+            key_held_callbacks_(x, y).clear();
         }
     }
     any_key_pressed_callbacks_.clear();
     any_key_released_callbacks_.clear();
+    any_key_held_callbacks_.clear();
 }
 
 void TrellisHWInterface::show() {
@@ -137,8 +152,42 @@ void TrellisHWInterface::show() {
 
 void TrellisHWInterface::tick() {
     trellis_.read();
+    // Tick each timer (will call callbacks if time has elapsed)
     for (auto& timer : timers_) {
         timer.tick(time_ms_.now());
     }
+    // Check for held keys
+    for (const auto& key_hold_time : get_key_hold_times(time_ms_.now())) {
+        Serial.printf("key held: %d, %d, %d\n", key_hold_time.x, key_hold_time.y, key_hold_time.hold_duration);
+        // Check if any key held callbacks should be called
+        for (const auto& [hold_duration, callback] : any_key_held_callbacks_) {
+            // Since durations are in order, we can break early
+            if (key_hold_time.hold_duration < hold_duration) {
+                break;
+            }
+            // Otherwise, call the callback and check the next one
+            callback(key_hold_time.x, key_hold_time.y, time_ms_.now());
+        }
+
+        // Check if specific key held callbacks should be called
+        for (const auto& [hold_duration, callback] : key_held_callbacks_(key_hold_time.x, key_hold_time.y)) {
+            // Same as above, if we find a duration that is too long, we can break
+            if (key_hold_time.hold_duration < hold_duration) {
+                break;
+            }
+            callback(time_ms_.now());
+        }
+    }
+
     delayMicroseconds(DEFAULT_TICK_PERIOD_US);
+}
+
+std::vector<KeyHoldTime> TrellisHWInterface::get_key_hold_times(const Time& now) const {
+    std::vector<KeyHoldTime> key_hold_times;
+    for (const auto& [row, col, time] : key_pressed_times_) {
+        if (time.has_value()) {
+            key_hold_times.emplace_back(KeyHoldTime{col, row, now - time.value()});
+        }
+    }
+    return key_hold_times;
 }

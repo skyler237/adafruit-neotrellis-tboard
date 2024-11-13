@@ -67,7 +67,7 @@ void Battery::init() {
     // Add "exit button" in top right corner
     trellis_controller_->display()->set_pixel_color(7, 0, RGBA(255, 0, 0));
     trellis_controller_->display()->show();
-    trellis_controller_->register_on_pressed_callback(
+    trellis_controller_->add_on_pressed_callback(
         7, 0, [this](const Time&) { switch_to_app(APPLICATION_PICKER_ID); });
 }
 

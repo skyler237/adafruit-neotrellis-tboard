@@ -25,7 +25,7 @@ void TBoardOS::set_startup_app(const tboard::ApplicationId& application_id) {
 
 void TBoardOS::start() {
     current_app_->init();
-    trellis_controller_->add_timer_callback(1, [this](const Time& now) { return run_timer_callback(now); });
+    trellis_controller_->add_timer(1, [this](const Time& now) { return run_timer_callback(now); });
 }
 
 void TBoardOS::switch_to_app(const ApplicationId& to_app) {

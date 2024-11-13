@@ -51,6 +51,17 @@ bool TrellisDisplay::is_pixel_on(int x, int y) const {
            get_pixel_color(x, y).colors.blue > 0;
 }
 
+bool TrellisDisplay::are_all_pixels_on() const {
+    for (int x = 0; x < 8; ++x) {
+        for (int y = 0; y < 8; ++y) {
+            if (!is_pixel_on(x, y)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 bool TrellisDisplay::are_all_pixels_off() const {
     for (int x = 0; x < 8; ++x) {
         for (int y = 0; y < 8; ++y) {
@@ -74,6 +85,27 @@ void TrellisDisplay::clear_region(int x, int y, int width, int height) {
     for (int i = x; i < x + width; ++i) {
         for (int j = y; j < y + height; ++j) {
             set_pixel_off(i, j);
+        }
+    }
+}
+
+void TrellisDisplay::fill(const RGBA color, const float brightness) {
+    for (int x = 0; x < 8; ++x) {
+        for (int y = 0; y < 8; ++y) {
+            set_pixel_color(x, y, color, brightness);
+        }
+    }
+}
+
+void TrellisDisplay::fill_region(const RGBA color,
+                                 const int x,
+                                 const int y,
+                                 const int width,
+                                 const int height,
+                                 const float brightness) {
+    for (int i = x; i < x + width; ++i) {
+        for (int j = y; j < y + height; ++j) {
+            set_pixel_color(i, j, color, brightness);
         }
     }
 }

@@ -6,6 +6,8 @@
 // #pragma once
 #ifndef TBOARD_TRELLIS_CONTROLLER_H
 #define TBOARD_TRELLIS_CONTROLLER_H
+#include <vector>
+
 #include "colors.h"
 #include "trellis_display.h"
 #include "trellis_interface.h"
@@ -20,12 +22,13 @@ public:
     const TrellisDisplayPtr& display() const { return trellis_display_; }
 
     // Register callbacks for button presses
-    void register_on_pressed_callback(int x, int y, OnEventCallback callback) const;
-    void register_on_released_callback(int x, int y, OnEventCallback callback) const;
-    void set_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) const;
-    void set_on_any_key_released_callback(OnAnyKeyEventCallback callback) const;
-    void set_on_any_key_held_callback(Duration hold_duration_ms, OnAnyKeyEventCallback callback) const;
-    void add_timer_callback(int period_ms, OnTimerEventCallback callback) const;
+    void add_on_pressed_callback(int x, int y, OnEventCallback callback) const;
+    void add_on_released_callback(int x, int y, OnEventCallback callback) const;
+    void add_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) const;
+    void add_on_any_key_released_callback(OnAnyKeyEventCallback callback) const;
+    void add_on_any_key_held_callback(Duration hold_duration_ms, OnAnyKeyEventCallback callback) const;
+    void add_on_key_held_callback(Duration hold_duration_ms, int x, int y, OnEventCallback callback) const;
+    void add_timer(int period_ms, OnTimerEventCallback callback) const;
     void clear_callbacks() const;
 
 private:

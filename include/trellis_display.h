@@ -38,7 +38,9 @@ public:
 
     void clear_region(int x, int y, int width, int height);
 
-    void fill(RGBA color);
+    void fill(RGBA color, float brightness = 1.0);
+
+    void fill_region(RGBA color, int x, int y, int width, int height, float brightness = 1.0);
 
     // Text handling
     void draw_character(int x, int y, char c, RGBA color, float brightness = 1.0);
@@ -52,25 +54,6 @@ private:
 
     static RGBA get_color_at_brightness(RGBA color, float brightness);
 };
-
-inline bool TrellisDisplay::are_all_pixels_on() const {
-    for (int x = 0; x < 8; ++x) {
-        for (int y = 0; y < 8; ++y) {
-            if (!is_pixel_on(x, y)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-inline void TrellisDisplay::fill(RGBA color) {
-    for (int x = 0; x < 8; ++x) {
-        for (int y = 0; y < 8; ++y) {
-            set_pixel_color(x, y, color);
-        }
-    }
-}
 
 using TrellisDisplayPtr = std::shared_ptr<TrellisDisplay>;
 

@@ -9,6 +9,7 @@
 
 // #include "includes.h"
 #include <Adafruit_NeoTrellis.h>
+#include <map>
 #include <timing.h>
 #include <utility>
 #include <vector>
@@ -35,6 +36,12 @@ private:
     uint16_t timer_period_ms_;
 };
 
+struct KeyHoldTime {
+    int x;
+    int y;
+    Duration hold_duration;
+};
+
 class TrellisHWInterface : public TrellisInterface {
 public:
     TrellisHWInterface();
@@ -59,6 +66,10 @@ public:
     void add_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) override;
     void add_on_any_key_released_callback(OnAnyKeyEventCallback callback) override;
 
+    void add_on_any_key_held_callback(Duration hold_duration, OnAnyKeyEventCallback callback) override;
+    // void add_keys_held_callback(Duration hold_duration, std::vector<Key> keys, OnEventCallback callback) override;
+    void add_on_key_held_callback(Duration hold_duration, int x, int y, OnEventCallback callback) override;
+
     void add_timer(int period_ms, OnTimerEventCallback callback) override;
 
     void clear_callbacks() override;
@@ -75,5 +86,13 @@ private:
     std::vector<OnAnyKeyEventCallback> any_key_released_callbacks_;
     std::vector<Timer> timers_;
     milliSeconds time_ms_;
+
+    // Used for determining how long each key has been held -- nullopt if key was released
+    Grid8x8<tl::optional<Time>> key_pressed_times_;
+    // Store these in a map (in ascending duration order) so we can quit the search after the first one that is not met
+    std::map<Duration, OnAnyKeyEventCallback> any_key_held_callbacks_;
+    Grid8x8<std::map<Duration, OnEventCallback>> key_held_callbacks_;
+
+    std::vector<KeyHoldTime> get_key_hold_times(const Time& now) const;
 };
 #endif // TRELLIS_HW_INTERFACE_H

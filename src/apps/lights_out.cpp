@@ -36,7 +36,7 @@ void LightsOut::init() {
     trellis_controller_->display()->clear();
     trellis_controller_->display()->show();
 
-    trellis_controller_->set_on_any_key_pressed_callback([this](int x, int y, const Time&) {
+    trellis_controller_->add_on_any_key_pressed_callback([this](int x, int y, const Time&) {
         // Toggle the pressed pixel and surrounding adjacent pixels
         trellis_controller_->display()->toggle_pixel(x, y, COLOR, BRIGHTNESS);
         if (x > 0) {

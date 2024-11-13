@@ -38,7 +38,7 @@ void RandomColorToggle::init() {
     trellis_controller_->display()->clear();
     trellis_controller_->display()->show();
     // trellis_controller_->clear_callbacks();
-    trellis_controller_->set_on_any_key_pressed_callback([this](int x, int y, const Time&) {
+    trellis_controller_->add_on_any_key_pressed_callback([this](int x, int y, const Time&) {
         // Generate random color
         trellis_controller_->display()->toggle_pixel(x, y, get_random_color());
         ;

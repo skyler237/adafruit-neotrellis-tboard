@@ -22,6 +22,7 @@ public:
     void handle_button_pressed(int x, int y);
 
     tl::optional<RGBA> get_selected_color() const;
+    RGBA get_color_at(int x) const;
 
     void draw() const;
 
