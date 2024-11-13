@@ -10,6 +10,8 @@
 // #include "includes.h"
 #include <Adafruit_NeoTrellis.h>
 #include <timing.h>
+#include <utility>
+#include <vector>
 
 #include "colors.h"
 #include "optional.h"
@@ -20,6 +22,18 @@ constexpr int Y_DIM = 8;
 static constexpr uint32_t DEFAULT_TICK_PERIOD_US = 1000;
 class TrellisHWInterface;
 using TrellisHWInterfacePtr = std::shared_ptr<TrellisHWInterface>;
+
+class Timer {
+public:
+    Timer(uint16_t period_ms, OnTimerEventCallback callback);
+
+    void tick(Time now);
+
+private:
+    OnTimerEventCallback timer_callback_;
+    tl::optional<Time> next_timer_time_ = tl::nullopt;
+    uint16_t timer_period_ms_;
+};
 
 class TrellisHWInterface : public TrellisInterface {
 public:
@@ -39,13 +53,13 @@ public:
 
     void clear_pixel(int x, int y) override;
 
-    void register_on_pressed_callback(int x, int y, OnEventCallback callback) override;
-    void register_on_released_callback(int x, int y, OnEventCallback callback) override;
+    void add_on_pressed_callback(int x, int y, OnEventCallback callback) override;
+    void add_on_released_callback(int x, int y, OnEventCallback callback) override;
 
-    void register_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) override;
-    void register_on_any_key_released_callback(OnAnyKeyEventCallback callback) override;
+    void add_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) override;
+    void add_on_any_key_released_callback(OnAnyKeyEventCallback callback) override;
 
-    void register_timer_callback(int period_ms, OnTimerEventCallback callback) override;
+    void add_timer(int period_ms, OnTimerEventCallback callback) override;
 
     void clear_callbacks() override;
 
@@ -53,17 +67,13 @@ public:
 
     void tick();
 
-    void set_timer_period(uint16_t period_ms);
-
 private:
     Adafruit_MultiTrellis trellis_;
-    Grid8x8<tl::optional<OnEventCallback>> on_pressed_callbacks_;
-    Grid8x8<tl::optional<OnEventCallback>> on_released_callbacks_;
-    OnAnyKeyEventCallback any_key_pressed_callback_;
-    OnAnyKeyEventCallback any_key_released_callback_;
-    OnTimerEventCallback timer_callback_;
-    Time next_timer_time_{0};
-    uint16_t timer_period_ms_;
+    Grid8x8<std::vector<OnEventCallback>> on_pressed_callbacks_;
+    Grid8x8<std::vector<OnEventCallback>> on_released_callbacks_;
+    std::vector<OnAnyKeyEventCallback> any_key_pressed_callbacks_;
+    std::vector<OnAnyKeyEventCallback> any_key_released_callbacks_;
+    std::vector<Timer> timers_;
     milliSeconds time_ms_;
 };
 #endif // TRELLIS_HW_INTERFACE_H

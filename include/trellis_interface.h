@@ -50,11 +50,11 @@ public:
 
     virtual void set_pixel_color(int x, int y, int r, int g, int b) = 0;
     virtual void clear_pixel(int x, int y) = 0;
-    virtual void register_on_pressed_callback(int x, int y, OnEventCallback callback) = 0;
-    virtual void register_on_released_callback(int x, int y, OnEventCallback callback) = 0;
-    virtual void register_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) = 0;
-    virtual void register_on_any_key_released_callback(OnAnyKeyEventCallback callback) = 0;
-    virtual void register_timer_callback(int period_ms, OnTimerEventCallback callback) = 0;
+    virtual void add_on_pressed_callback(int x, int y, OnEventCallback callback) = 0;
+    virtual void add_on_released_callback(int x, int y, OnEventCallback callback) = 0;
+    virtual void add_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) = 0;
+    virtual void add_on_any_key_released_callback(OnAnyKeyEventCallback callback) = 0;
+    virtual void add_timer(int period_ms, OnTimerEventCallback callback) = 0;
     virtual void show() = 0;
     virtual void clear_callbacks() = 0;
 };

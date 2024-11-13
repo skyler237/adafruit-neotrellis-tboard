@@ -5,6 +5,29 @@
 
 #include "trellis_hw_interface.h"
 
+Timer::Timer(const uint16_t period_ms, OnTimerEventCallback callback)
+    : timer_callback_(std::move(callback)), timer_period_ms_(period_ms) {
+    // Treat 0 period as no timer
+    if (period_ms == 0) {
+        next_timer_time_ = tl::nullopt;
+    } else {
+        // Set timer to trigger right away
+        next_timer_time_ = 0;
+    }
+}
+
+void Timer::tick(const Time now) {
+    if (next_timer_time_.has_value() && now >= next_timer_time_) {
+        next_timer_time_ = now + timer_period_ms_;
+        tl::optional<Duration> maybe_new_period = timer_callback_(now);
+        if (maybe_new_period.has_value()) {
+            const Duration delta_duration = maybe_new_period.value() - timer_period_ms_;
+            timer_period_ms_ = maybe_new_period.value();
+            next_timer_time_.value() += delta_duration;
+        }
+    }
+}
+
 TrellisHWInterface::TrellisHWInterface()
     : trellis_(reinterpret_cast<Adafruit_NeoTrellis*>(new Adafruit_NeoTrellis[Y_DIM / 4][X_DIM / 4]{
                    {Adafruit_NeoTrellis(0x2F), Adafruit_NeoTrellis(0x2E)},
@@ -22,20 +45,18 @@ TrellisCallback TrellisHWInterface::key_event_callback(keyEvent event) {
     const int x = event.bit.NUM % X_DIM;
     const int y = event.bit.NUM / X_DIM;
     if (event.bit.EDGE == SEESAW_KEYPAD_EDGE_RISING) {
-        const auto& cb = on_pressed_callbacks_(x, y);
-        if (cb.has_value()) {
-            cb.value()(time_ms_.now());
+        for (const auto& cb : on_pressed_callbacks_(x, y)) {
+            cb(time_ms_.now());
         }
-        if (any_key_pressed_callback_) {
-            any_key_pressed_callback_(x, y, time_ms_.now());
+        for (const auto& cb : any_key_pressed_callbacks_) {
+            cb(x, y, time_ms_.now());
         }
     } else if (event.bit.EDGE == SEESAW_KEYPAD_EDGE_FALLING) {
-        const auto& cb = on_released_callbacks_(x, y);
-        if (cb.has_value()) {
-            cb.value()(time_ms_.now());
+        for (const auto& cb : on_released_callbacks_(x, y)) {
+            cb(time_ms_.now());
         }
-        if (any_key_released_callback_) {
-            any_key_released_callback_(x, y, time_ms_.now());
+        for (const auto& cb : any_key_released_callbacks_) {
+            cb(x, y, time_ms_.now());
         }
     }
     return nullptr;
@@ -79,42 +100,35 @@ void TrellisHWInterface::clear_pixel(int x, int y) {
     trellis_.setPixelColor(x, y, 0);
 }
 
-void TrellisHWInterface::register_on_pressed_callback(int x, int y, OnEventCallback callback) {
-    on_pressed_callbacks_(x, y) = std::move(callback);
+void TrellisHWInterface::add_on_pressed_callback(int x, int y, OnEventCallback callback) {
+    on_pressed_callbacks_(x, y).emplace_back(std::move(callback));
 }
 
-void TrellisHWInterface::register_on_released_callback(int x, int y, OnEventCallback callback) {
-    on_released_callbacks_(x, y) = std::move(callback);
+void TrellisHWInterface::add_on_released_callback(int x, int y, OnEventCallback callback) {
+    on_released_callbacks_(x, y).emplace_back(std::move(callback));
 }
 
-void TrellisHWInterface::register_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) {
-    any_key_pressed_callback_ = std::move(callback);
+void TrellisHWInterface::add_on_any_key_pressed_callback(OnAnyKeyEventCallback callback) {
+    any_key_pressed_callbacks_.emplace_back(std::move(callback));
 }
 
-void TrellisHWInterface::register_on_any_key_released_callback(OnAnyKeyEventCallback callback) {
-    any_key_released_callback_ = std::move(callback);
+void TrellisHWInterface::add_on_any_key_released_callback(OnAnyKeyEventCallback callback) {
+    any_key_released_callbacks_.emplace_back(std::move(callback));
 }
 
-void TrellisHWInterface::register_timer_callback(const int period_ms, OnTimerEventCallback callback) {
-    if (period_ms == 0) {
-        next_timer_time_ = 0;
-    } else {
-        // Set timer to trigger right away
-        next_timer_time_ = time_ms_.now();
-    }
-    timer_callback_ = std::move(callback);
-    timer_period_ms_ = period_ms;
+void TrellisHWInterface::add_timer(const int period_ms, OnTimerEventCallback callback) {
+    timers_.emplace_back(period_ms, std::move(callback));
 }
 
 void TrellisHWInterface::clear_callbacks() {
     for (int x = 0; x < X_DIM; ++x) {
         for (int y = 0; y < Y_DIM; ++y) {
-            on_pressed_callbacks_(x, y) = tl::nullopt;
-            on_released_callbacks_(x, y) = tl::nullopt;
+            on_pressed_callbacks_(x, y).clear();
+            on_released_callbacks_(x, y).clear();
         }
     }
-    any_key_pressed_callback_ = {};
-    any_key_released_callback_ = {};
+    any_key_pressed_callbacks_.clear();
+    any_key_released_callbacks_.clear();
 }
 
 void TrellisHWInterface::show() {
@@ -123,26 +137,8 @@ void TrellisHWInterface::show() {
 
 void TrellisHWInterface::tick() {
     trellis_.read();
-    if (timer_callback_ && next_timer_time_ > 0 && time_ms_.now() >= next_timer_time_) {
-        next_timer_time_ = time_ms_.now() + timer_period_ms_;
-        tl::optional<Duration> maybe_new_period = timer_callback_(time_ms_.now());
-        if (maybe_new_period.has_value()) {
-            const Duration delta_duration = maybe_new_period.value() - timer_period_ms_;
-            timer_period_ms_ = maybe_new_period.value();
-            next_timer_time_ += delta_duration;
-        }
+    for (auto& timer : timers_) {
+        timer.tick(time_ms_.now());
     }
     delayMicroseconds(DEFAULT_TICK_PERIOD_US);
-    // if (any_key_callback_) {
-    //     Serial.println("Has any key callback");
-    //     any_key_callback_(0, 0, time_ms_.now());
-    // }
-    // else {
-    //     Serial.println("No any key callback");
-    // }
-    // Serial.println("");
-}
-
-void TrellisHWInterface::set_timer_period(uint16_t period_ms) {
-    timer_period_ms_ = period_ms;
 }
