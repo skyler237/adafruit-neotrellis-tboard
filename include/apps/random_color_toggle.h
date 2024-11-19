@@ -29,7 +29,7 @@ public:
 private:
     std::random_device random_;
     std::mt19937 generator_;
-    std::uniform_int_distribution<> distribution_;
+    std::uniform_real_distribution<> distribution_;
 
     RGBA get_random_color();
 };
