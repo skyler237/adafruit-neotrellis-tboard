@@ -24,5 +24,7 @@ static const ApplicationId LIGHTS_OUT_ID{.id = 4, .name = "Lights Out"};
 
 static const ApplicationId BATTERY_ID{.id = 5, .name = "Battery"};
 
+static const ApplicationId TIC_TAC_TOE_ID{.id = 6, .name = "Tic-Tac-Toe"};
+
 } // namespace tboard::apps
 #endif // TBOARD_APPLICATION_IDS_H
