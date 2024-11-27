@@ -20,6 +20,7 @@ static const std::vector<std::pair<ApplicationId, RGBA>> APPLICATION_LIST = {
     {       COLORING_PAD_ID,   BLUE},
     {RANDOM_COLOR_TOGGLE_ID, PURPLE},
     {         LIGHTS_OUT_ID,  GREEN},
+    {         TIC_TAC_TOE_ID,  ORANGE},
 };
 
 class ApplicationPicker : public Application {
