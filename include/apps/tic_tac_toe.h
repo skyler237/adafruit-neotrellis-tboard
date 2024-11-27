@@ -6,6 +6,7 @@
 #pragma once
 
 #include <animation.h>
+#include <set>
 
 #include "os/application.h"
 
@@ -13,10 +14,28 @@ namespace tboard::apps {
 
 enum Player : uint8_t { PLAYER_X, PLAYER_O };
 
-struct GameState {
-    bool is_game_over;
+struct BoardCoordinates {
+    int x;
+    int y;
+
+    // Constructor
+    BoardCoordinates(int x, int y) : x(x), y(y) { }
+
+    // Comparison operator
+    bool operator<(const BoardCoordinates& other) const { return x < other.x || (x == other.x && y < other.y); }
+};
+
+struct WinState {
     // nullopt if the game is a draw
     tl::optional<Player> winner;
+
+    // The winning coordinates
+    std::vector<BoardCoordinates> winning_coords;
+};
+
+struct GameState {
+    bool is_game_over;
+    WinState win_state;
 };
 
 class TicTacToeBoard {
@@ -25,7 +44,7 @@ public:
 
     void handle_button_pressed(int x, int y);
 
-    void draw() const;
+    void draw(const std::set<BoardCoordinates>& highlighted_squares = {}) const;
 
     const GameState& get_game_state() const;
 
@@ -39,7 +58,7 @@ private:
     GameState assess_game_state();
 
     // Convert from 8x8 pixel grid to 3x3 tic tac toe grid -- return optional if the pixel is on a divider line
-    tl::optional<std::pair<int, int>> to_board_coords(int x, int y) const;
+    tl::optional<BoardCoordinates> to_board_coords(int x, int y) const;
 };
 
 class TicTacToe : public Application {

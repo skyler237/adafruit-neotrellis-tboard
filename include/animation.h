@@ -10,7 +10,7 @@ namespace tboard {
 
 struct Frame {
     Time start_time;
-    Duration display_duration;
+    Duration display_duration_ms;
     std::function<void(const TrellisDisplayPtr&)> draw_frame_callback;
 };
 
@@ -43,7 +43,7 @@ public:
 private:
     const bool loop_;
     std::vector<Frame> frames_;
-    int current_frame_index_{-1};
+    size_t next_frame_index_{0};
 };
 
 } // namespace tboard

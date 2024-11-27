@@ -25,25 +25,37 @@ GameState TicTacToeBoard::assess_game_state() {
     for (int y = 0; y < 3; ++y) {
         if (board_[y][0].has_value() && board_[y][0] == board_[y][1] && board_[y][1] == board_[y][2]) {
             // Horizontal win
-            return {.is_game_over = true, .winner = board_[y][0].value()};
+            return {
+                .is_game_over = true,
+                .win_state = {.winner = board_[y][0].value(), .winning_coords = {{{0, y}, {1, y}, {2, y}}}}
+            };
         }
     }
     // Check for vertical win
     for (int x = 0; x < 3; ++x) {
         if (board_[0][x].has_value() && board_[0][x] == board_[1][x] && board_[1][x] == board_[2][x]) {
             // Vertical win
-            return {.is_game_over = true, .winner = board_[0][x].value()};
+            return {
+                .is_game_over = true,
+                .win_state = {.winner = board_[0][x].value(), .winning_coords = {{{x, 0}, {x, 1}, {x, 2}}}}
+            };
         }
     }
     // Check for diagonal win (top left to bottom right)
     if (board_[0][0].has_value() && board_[0][0] == board_[1][1] && board_[1][1] == board_[2][2]) {
         // Diagonal win
-        return {.is_game_over = true, .winner = board_[0][0].value()};
+        return {
+            .is_game_over = true,
+            .win_state = {.winner = board_[0][0].value(), .winning_coords = {{{0, 0}, {1, 1}, {2, 2}}}}
+        };
     }
     // Check for diagonal win (top right to bottom left)
     if (board_[0][2].has_value() && board_[0][2] == board_[1][1] && board_[1][1] == board_[2][0]) {
         // Diagonal win
-        return {.is_game_over = true, .winner = board_[0][2].value()};
+        return {
+            .is_game_over = true,
+            .win_state = {.winner = board_[0][2].value(), .winning_coords = {{{2, 0}, {1, 1}, {0, 2}}}}
+        };
     }
     // Check for draw
     for (int y = 0; y < 3; ++y) {
@@ -54,7 +66,7 @@ GameState TicTacToeBoard::assess_game_state() {
             }
         }
     }
-    return {.is_game_over = true, .winner = tl::nullopt};
+    return {.is_game_over = true, .win_state = {.winner = tl::nullopt}};
 }
 
 void TicTacToeBoard::handle_button_pressed(int x, int y) {
@@ -91,7 +103,7 @@ void TicTacToeBoard::handle_button_pressed(int x, int y) {
     Serial.println("Game is over: " + String(game_state_.is_game_over));
 }
 
-void TicTacToeBoard::draw() const {
+void TicTacToeBoard::draw(const std::set<BoardCoordinates>& highlighted_squares) const {
     for (int y = 0; y < 8; ++y) {
         for (int x = 0; x < 8; ++x) {
             const auto board_coord = to_board_coords(x, y);
@@ -103,8 +115,11 @@ void TicTacToeBoard::draw() const {
                 const auto& maybe_player_mark = board_[board_y][board_x];
                 // If there is a player mark, display it
                 if (maybe_player_mark.has_value()) {
+                    // Maybe highlight this square
+                    const float brightness =
+                        highlighted_squares.count(BoardCoordinates{board_x, board_y}) > 0 ? 1.0 : DEFAULT_BRIGHTNESS;
                     const RGBA color = maybe_player_mark.value() == PLAYER_X ? X_COLOR : O_COLOR;
-                    display_->set_pixel_color(x, y, color, DEFAULT_BRIGHTNESS);
+                    display_->set_pixel_color(x, y, color, brightness);
                     // NO player mark, keep this cell empty
                 } else {
                     display_->set_pixel_off(x, y);
@@ -119,11 +134,11 @@ const GameState& TicTacToeBoard::get_game_state() const {
     return game_state_;
 }
 
-tl::optional<std::pair<int, int>> TicTacToeBoard::to_board_coords(int x, int y) const {
+tl::optional<BoardCoordinates> TicTacToeBoard::to_board_coords(int x, int y) const {
     if (x == 2 || x == 5 || y == 2 || y == 5) {
         return tl::nullopt;
     }
-    return std::make_pair(x / 3, y / 3);
+    return BoardCoordinates(x / 3, y / 3);
 }
 
 TicTacToe::~TicTacToe() = default;
@@ -169,7 +184,7 @@ tl::optional<ApplicationId> TicTacToe::tick(const Time& now) {
         if (!win_animation_->tick(now)) {
             win_animation_ = tl::nullopt;
             // Start the game over!
-            return APPLICATION_PICKER_ID;
+            return TIC_TAC_TOE_ID;
         }
         // Still animating
         return tl::nullopt;
@@ -177,25 +192,44 @@ tl::optional<ApplicationId> TicTacToe::tick(const Time& now) {
 
     Serial.println("Tac!");
     if (board_->get_game_state().is_game_over) {
+        // Disable any other key presses during animation
+        trellis_controller_->clear_callbacks();
+
         // Define the win animation
-        const auto winner = board_->get_game_state().winner;
-        RGBA winner_color;
-        if (!winner) {
-            winner_color = BOARD_COLOR;
-        } else if (winner.value() == PLAYER_X) {
-            winner_color = X_COLOR;
-        } else {
-            winner_color = O_COLOR;
-        }
+        const auto win_state = board_->get_game_state().win_state;
 
         // Initialize the win animation
+        Serial.println("Start win animation");
         win_animation_.emplace(trellis_controller_->display());
-        win_animation_->add_frame(
-            {.display_duration = 2000, .draw_frame_callback = [winner_color](const TrellisDisplayPtr& display) {
-                 display->fill(winner_color, DEFAULT_BRIGHTNESS);
-             }});
-    }
 
+        if (win_state.winner.has_value()) {
+            // Add the win animation frames
+            win_animation_->add_frame({.display_duration_ms = 500,
+                                       .draw_frame_callback = [win_state, this](const TrellisDisplayPtr& display) {
+                                           board_->draw({win_state.winning_coords[0]});
+                                       }});
+            win_animation_->add_frame({.display_duration_ms = 500,
+                                       .draw_frame_callback = [win_state, this](const TrellisDisplayPtr& display) {
+                                           board_->draw({win_state.winning_coords[1]});
+                                       }});
+            win_animation_->add_frame({.display_duration_ms = 500,
+                                       .draw_frame_callback = [win_state, this](const TrellisDisplayPtr& display) {
+                                           board_->draw({win_state.winning_coords[2]});
+                                       }});
+            win_animation_->add_frame({.display_duration_ms = 2000,
+                                       .draw_frame_callback = [win_state, this](const TrellisDisplayPtr& display) {
+                                           // Highlight all winning squares
+                                           board_->draw(
+                                               {win_state.winning_coords.begin(), win_state.winning_coords.end()});
+                                       }});
+        } else {
+            win_animation_->add_frame({.display_duration_ms = 2000,
+                                       .draw_frame_callback = [win_state, this](const TrellisDisplayPtr& display) {
+                                           // Just freeze the frame for a bit before resetting
+                                           board_->draw();
+                                       }});
+        }
+    }
 
     Serial.println("Toe!");
     return tl::nullopt;
